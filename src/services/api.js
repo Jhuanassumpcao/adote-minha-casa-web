@@ -1,7 +1,7 @@
 import axios from 'axios';
 const isProd = process.env.NODE_ENV === "production";
 
-const apiUrl = "http://localhost:3333";
+const apiUrl = "https://adote-minha-casa-api-ef5021418d25.herokuapp.com";
 
 const api = axios.create({
     baseURL: apiUrl,
