@@ -5,7 +5,7 @@ const apiUrl = "https://adote-minha-casa-api-ef5021418d25.herokuapp.com";
 
 const api = axios.create({
     baseURL: apiUrl,
-    timeout: 5000,
+    timeout: 50000,
 });
 
 api.interceptors.request.use(

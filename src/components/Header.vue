@@ -15,9 +15,6 @@
               <router-link class="nav-link text-white btn light-button" to="/">Home</router-link>
             </li>
             <li class="nav-item">
-              <router-link class="nav-link text-white btn light-button" to="/about">Sobre</router-link>
-            </li>
-            <li class="nav-item">
               <router-link class="nav-link text-white btn light-button" to="/search">Quero Doar</router-link>
             </li>
             <li class="nav-item">

@@ -32,11 +32,6 @@ const router = createRouter({
       component: Search
     },
     {
-      path: '/about',
-      name: 'about',
-      component: () => import('../views/AboutView.vue')
-    },
-    {
       path: '/page/:id',
       name: 'Page',
       component: Donation
