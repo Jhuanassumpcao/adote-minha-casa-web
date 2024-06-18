@@ -5,7 +5,7 @@
       <div>
         <router-link to="/" class="d-flex flex-column align-items-center" style="text-decoration: none;">
           <img :src="logo" alt="Logo" class="img-fluid mb-3" style="max-width:80px; max-height: 80px;">
-          <p >Adote inha Casa</p>
+          <p >Adote Minha Casa</p>
         </router-link>
       </div>
       <nav class="navbar navbar-expand navbar-light wrap">

@@ -44,6 +44,9 @@ export default {
         const response = await api.post('/login', data);
         localStorage.setItem('TOKEN_KEY', response.data.token);
         this.$router.push(`/`);
+        //clean the form
+        this.email = '';
+        this.password = '';
 
         console.log("LOGIN FEITO COM SUCESSO", response);
       } catch (error) {

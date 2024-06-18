@@ -78,6 +78,18 @@ export default {
       };
       const response = await api.post('/houses', data);
       console.log(response);
+      //clean the form
+      this.cep = '';
+      this.city = '';
+      this.bairro = '';
+      this.address = '';
+      this.state = '';
+      this.value = '';
+      this.title = '';
+      this.description = '';
+      this.pix = '';
+      this.phoneNumber = '';
+      
     },
 
     handle_cep(event) {

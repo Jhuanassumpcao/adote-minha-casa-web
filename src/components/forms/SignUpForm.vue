@@ -64,10 +64,10 @@ export default {
       const data = {
         "email": this.email,
         "name": this.name,
+        "state": this.state,
+        "city": this.city,
         "phone": this.phone,
         "password": this.password,
-        "city": this.city,
-        "state": this.state
       }
 
       if (this.password !== this.passwordConf) {
@@ -76,6 +76,14 @@ export default {
         try{
           const response = await api.post('/recipients', data);
           console.log(response);
+          //clean the form
+          this.email = '';
+          this.name = '';
+          this.password = '';
+          this.passwordConf = '';
+          this.phone = '';
+          this.city = '';
+          this.state = '';
         } catch (error) {
           console.error(error);
         }
