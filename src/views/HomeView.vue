@@ -63,7 +63,7 @@ export default {
           component: InfoCard,
           props: {
             id: item.id,
-            imageSrc: item.file_url || "https://www.petz.com.br/blog/wp-content/uploads/2021/04/raca-de-cachorro-docil-2.jpg", // Use uma imagem padrão se `file_url` for null
+            imageSrc: item.file_url || "https://www.shutterstock.com/image-vector/house-logo-template-design-vector-600nw-741515455.jpg", // Use uma imagem padrão se `file_url` for null
             title: item.title,
             description: item.description,
             ownerName: item.recipient.name,
