@@ -74,8 +74,15 @@ export default {
         alert('As senhas não conferem');
       }else{
         try{
+          //user register
           const response = await api.post('/recipients', data);
           console.log(response);
+          //user login
+          const responselogin = await api.post('/login', {
+            email: this.email,
+            password: this.password
+          });
+          localStorage.setItem('TOKEN_KEY', responselogin.data.token);
           //clean the form
           this.email = '';
           this.name = '';
@@ -84,6 +91,7 @@ export default {
           this.phone = '';
           this.city = '';
           this.state = '';
+          this.$router.push(`/requirement`);
         } catch (error) {
           console.error(error);
         }
