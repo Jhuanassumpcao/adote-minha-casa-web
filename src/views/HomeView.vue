@@ -7,7 +7,7 @@
       <div class="container text-center">
         <h2 class="mb-4">Adote Minha Casa</h2>
         <p style="font-size:25px">Unindo pessoas que precisam de ajuda com pessoas dispostas a ajudar.</p>
-        <div class="d-flex justify-content-evenly">
+        <div class="d-flex flex-wrap justify-content-evenly">
           <div class="card">
             <p>Juntas, ONGs colaboram para transformar vidas e lares.</p>
           </div>
