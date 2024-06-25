@@ -1,6 +1,6 @@
 <template>
   <div class="carousel">
-    <button class="carousel-button prev" @click="prevSlide">&laquo;</button>
+    <button class="carousel-button prev h-100" @click="prevSlide">&laquo;</button>
 
     <div id="carousel-3-items" class="d-inline-flex">
     <component
@@ -11,7 +11,7 @@
       />
     </div>
     
-    <button class="carousel-button next" @click="nextSlide">&raquo;</button>
+    <button class="carousel-button next h-100" @click="nextSlide">&raquo;</button>
   </div>
 </template>
 

@@ -24,6 +24,9 @@
             <li v-if="notloggedUser" class="nav-item">
               <router-link class="nav-link text-white btn light-button" to="/login">Entre ou Cadastre-se</router-link>
             </li>
+            <li v-if="tokenExists" class="nav-item">
+              <router-link to="/" class="nav-link text-white btn light-button" @click="logOut">Sair</router-link>
+            </li>
           </ul>
         </div>
       </nav>
@@ -39,13 +42,20 @@ export default {
   data() {
     return {
       logo: logo,
-      notloggedUser: false
+      notloggedUser: false,
+      tokenExists: false
     };
   },
   mounted() {
-    const tokenExists = localStorage.getItem('TOKEN_KEY');
-    this.notloggedUser = !tokenExists;
+    this.tokenExists = localStorage.getItem('TOKEN_KEY');
+    this.notloggedUser = !this.tokenExists;
   },
+  methods: {
+    logOut() {
+      localStorage.removeItem('TOKEN_KEY');
+      this.$router.go('/');
+    }
+  }
 }
 </script>
 
