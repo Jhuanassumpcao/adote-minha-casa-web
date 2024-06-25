@@ -10,6 +10,9 @@
           <label for="password">Senha:</label>
           <input type="password" id="password" v-model="password" required>
         </div>
+        <span id="login_fail" style="display:none">
+            <p style="color:red;">Email ou senha inválidos</p>
+        </span>
         <button type="submit" class="btn basicbutton" @click="login">Login</button>
       </form>
     </div>
@@ -17,7 +20,6 @@
 </template>
 
 <script>
-import {loginRecipient} from '@/scripts/recipients.js';
 import api from '@/services/api.js';
 
 export default {
@@ -32,9 +34,6 @@ export default {
   },
   methods: {
     async login() {
-      console.log('Email:', this.email);
-      console.log('Password:', this.password);
-      
       const data = {
         email: this.email,
         password: this.password,
@@ -50,7 +49,7 @@ export default {
 
         console.log("LOGIN FEITO COM SUCESSO", response);
       } catch (error) {
-        console.error(error);
+        document.getElementById('login_fail').style.display = 'block';
       }
 
     }

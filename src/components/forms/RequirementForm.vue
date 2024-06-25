@@ -30,7 +30,7 @@
         </div>
         <div class="form-group">
           <label for="phoneNumber">Whatzapp:</label>
-          <input type="tel" id="phoneNumber" v-model="phoneNumber" required>
+          <input type="text" id="phoneNumber" v-model="phoneNumber" required>
         </div>
         
         <button type="submit" class="btn basicbutton">Abrir Requerimento</button>
@@ -39,7 +39,6 @@
 </template>
 
 <script>
-import {sendPostHouses} from '@/scripts/houses.js';
 import api from '@/services/api.js';
 
 export default {

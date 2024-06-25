@@ -15,14 +15,27 @@
           <label for="phone">Telefone:</label>
           <input type="text" id="phone" v-model="phone" required>
         </div>
-        <div class="form-group">
-          <label for="city">Cidade:</label>
-          <input type="text" id="city" v-model="city" required>
-        </div>
+
         <div class="form-group">
           <label for="state">Estado:</label>
-          <input type="text" id="state" v-model="state" required>
+          <select v-model="state" class="form-select" 
+            id="state" 
+            @change="updateCities"
+            required>
+            <option v-for="state in stateList" :key="state" :value="state">{{ state }}</option>
+          </select>
         </div>
+
+        <div class="form-group">
+          <label for="cities">Cidade:</label>
+          <select v-model="city" class="form-select">
+                class="form-select mt-3" id="cities" 
+                :disabled="!state"
+                required>
+            <option v-for="city in cityList" :key="city" :value="city">{{ city }}</option>
+          </select>
+        </div>
+
         <div class="form-group">
           <label for="signpassword">Senha:</label>
           <input type="password" id="signpassword" v-model="password" required>
@@ -31,6 +44,14 @@
           <label for="signpassword2">Confirme sua senha:</label>
           <input type="password" id="signpassword2" v-model="passwordConf" required>
         </div>
+
+        <span id="signup_fail" style="display:none">
+            <p style="color:red;">Erro ao se cadastrar</p>
+        </span>
+        <span id="signup_password_fail" style="display:none">
+            <p style="color:red;">Senhas não conferem</p>
+        </span>
+
         <button type="submit" class="btn basicbutton">SignUp</button>
       </form>
     </div>
@@ -38,8 +59,8 @@
 </template>
 
 <script>
-import {sendPostRecipients} from '@/scripts/recipients.js';
 import api from '@/services/api.js';
+import { getStates, getCities } from '@/scripts/estados.js';
 
 export default {
   name: 'SignUp',
@@ -51,11 +72,22 @@ export default {
       passwordConf: '',
       phone: '',
       city: '',
-      state: ''
+      state: '',
+      stateList: [],
+      cityList: [],
     };
   },
+  async created() {
+    this.stateList = await getStates();
+  },
   methods: {
+    async updateCities() {
+      this.cityList = await getCities(this.state);
+    },
     async sign_up() {
+      document.getElementById('signup_password_fail').style.display = 'none';
+      document.getElementById('signup_fail').style.display = 'none';
+
       console.log('Email:', this.email);
       console.log('Name:', this.name);
       console.log('Password:', this.password);
@@ -71,7 +103,8 @@ export default {
       }
 
       if (this.password !== this.passwordConf) {
-        alert('As senhas não conferem');
+        console.log('Senhas não conferem');
+        document.getElementById('signup_password_fail').style.display = 'block';
       }else{
         try{
           //user register
@@ -93,12 +126,12 @@ export default {
           this.state = '';
           this.$router.push(`/requirement`);
         } catch (error) {
-          console.error(error);
+          document.getElementById('signup_fail').style.display = 'block';
+          console.log ('Erro ao se cadastrar', error);
         }
-        
       }
     }
-  }
+  },
 };
 </script>
 
