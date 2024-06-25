@@ -1,7 +1,6 @@
 <template>
-  <div class="container">
     <Header />
-    <div class="content">
+    <div class="content d-flex flex-column flex-wrap px-5">
       <section class="section">
         <h2 class="title">{{ title }}</h2>
       </section>
@@ -37,7 +36,6 @@
 
     </div>
     <Footer />
-  </div>
 </template>
 
 <script>

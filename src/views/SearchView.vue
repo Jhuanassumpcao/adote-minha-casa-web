@@ -47,7 +47,7 @@ export default {
             imageSrc: item.file_url || "https://www.shutterstock.com/image-vector/house-logo-template-design-vector-600nw-741515455.jpg", // Use uma imagem padrão se `file_url` for null
             title: item.title,
             description: item.description,
-            ownerName: "Marsio", // Ajuste conforme necessário
+            ownerName: item.recipient.name, // Ajuste conforme necessário
             pixkey: item.pixkey
           }
         }
