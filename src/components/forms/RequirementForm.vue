@@ -62,7 +62,7 @@ export default {
   methods: {
     async submit() {
       const data = {
-        "cadastred_by_user_id": "1",
+        "cadastred_by_user_id": "1", //TODO: get the user id
         "title": this.title,
         "description": this.description,
         "pixkey": this.pix,
@@ -75,6 +75,7 @@ export default {
         "number": this.phoneNumber
         //
       };
+      console.log(data);
       const response = await api.post('/houses', data);
       console.log(response);
       //clean the form
