@@ -29,21 +29,19 @@ export default {
       currentSlide: 0
     };
   },
-  computed: {
-    visibleSlides() {
-      return [
-        this.slides[this.currentSlide],
-        this.slides[(this.currentSlide + 1) % this.slides.length],
-        this.slides[(this.currentSlide + 2) % this.slides.length]
-      ];
-    }
-  },
   methods: {
     prevSlide() {
       this.currentSlide = (this.currentSlide === 0) ? this.slides.length - 1 : this.currentSlide - 1;
     },
     nextSlide() {
       this.currentSlide = (this.currentSlide === this.slides.length - 1) ? 0 : this.currentSlide + 1;
+    },
+    visibleSlides() {
+      return [
+        this.slides[this.currentSlide],
+        this.slides[(this.currentSlide + 1) % this.slides.length],
+        this.slides[(this.currentSlide + 2) % this.slides.length]
+      ];
     }
   }
 };
