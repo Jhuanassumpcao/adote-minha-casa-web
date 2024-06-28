@@ -41,7 +41,8 @@ export default {
       try{
         console.log(data)
         const response = await api.post('/login', data);
-        localStorage.setItem('TOKEN_KEY', response.data.token);
+        localStorage.setItem('TOKEN_KEY', response.data.token.token);
+        localStorage.setItem('USER_ID', response.data.user_id);
         this.$router.push(`/`);
         //clean the form
         this.email = '';

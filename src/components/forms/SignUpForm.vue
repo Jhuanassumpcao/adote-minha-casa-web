@@ -46,7 +46,7 @@
         </div>
 
         <span id="signup_fail" style="display:none">
-            <p style="color:red;">Erro ao se cadastrar</p>
+            <!-- <p style="color:red;">Erro ao se cadastrar</p> -->
         </span>
         <span id="signup_password_fail" style="display:none">
             <p style="color:red;">Senhas não conferem</p>
@@ -85,13 +85,11 @@ export default {
       this.cityList = await getCities(this.state);
     },
     async sign_up() {
-      document.getElementById('signup_password_fail').style.display = 'none';
-      document.getElementById('signup_fail').style.display = 'none';
-
-      console.log('Email:', this.email);
-      console.log('Name:', this.name);
-      console.log('Password:', this.password);
-      console.log('PasswordConf:', this.passwordConf);
+      const errMessage = document.getElementById('signup_fail');
+      const passErrorMessage = document.getElementById('signup_password_fail');
+      
+      errMessage.style.display = 'none';
+      passErrorMessage.style.display = 'none';
 
       const data = {
         "email": this.email,
@@ -104,18 +102,18 @@ export default {
 
       if (this.password !== this.passwordConf) {
         console.log('Senhas não conferem');
-        document.getElementById('signup_password_fail').style.display = 'block';
+        passErrorMessage.style.display = 'block';
       }else{
         try{
           //user register
           const response = await api.post('/recipients', data);
-          console.log(response);
+
           //user login
           const responselogin = await api.post('/login', {
             email: this.email,
             password: this.password
-          });
-          localStorage.setItem('TOKEN_KEY', responselogin.data.token);
+          })
+
           //clean the form
           this.email = '';
           this.name = '';
@@ -124,10 +122,17 @@ export default {
           this.phone = '';
           this.city = '';
           this.state = '';
+
+          localStorage.setItem('TOKEN_KEY', response.data.token.token);
+          localStorage.setItem('USER_ID', response.data.user_id);
+          
           this.$router.push(`/requirement`);
-        } catch (error) {
-          document.getElementById('signup_fail').style.display = 'block';
-          console.log ('Erro ao se cadastrar', error);
+        } catch (error){
+
+          console.log(error);
+          errMessage.style.display = 'block';
+          errMessage.innerHTML = "<p style=\"color:red\">" + error.response.data.errors[0].message + "</p>";
+          
         }
       }
     }

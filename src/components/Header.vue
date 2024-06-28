@@ -3,30 +3,24 @@
   <header class="text-white">
     <div class="container d-flex justify-content-between align-items-center py-3">
       <div>
-        <router-link to="/" class="d-flex flex-column align-items-center" 
-                    style="text-decoration: none; margin-right:50px;">
-          <img :src="logo" alt="Logo" class="img-fluid mb-3" style="max-width:80px; max-height: 80px;">
-          <p class="text-center">Adote Minha Casa</p>
-        </router-link>
+        <Logo />
       </div>
       <nav class="navbar navbar-expand navbar-light wrap">
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav flex-wrap gap-3">
-            <li class="nav-item">
-              <router-link class="nav-link text-white btn light-button" to="/">Home</router-link>
+
+            <li v-for="(link) in links" key="link.name" class="nav-item">
+
+              <router-link class="nav-link text-white btn light-button"
+                v-if="link.condition"
+                :to="link.path" 
+                @click="link.action"
+                >
+                  {{ link.name }}
+              </router-link>
+
             </li>
-            <li class="nav-item">
-              <router-link class="nav-link text-white btn light-button" to="/search">Quero Doar</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link class="nav-link text-white btn light-button" to="/requirement">Preciso de Ajuda</router-link>
-            </li>
-            <li v-if="notloggedUser" class="nav-item">
-              <router-link class="nav-link text-white btn light-button" to="/login">Entre ou Cadastre-se</router-link>
-            </li>
-            <li v-if="tokenExists" class="nav-item">
-              <router-link to="/" class="nav-link text-white btn light-button" @click="logOut">Sair</router-link>
-            </li>
+
           </ul>
         </div>
       </nav>
@@ -35,26 +29,33 @@
 </template>
 
 <script>
-import logo from '@/assets/lar.png'
+import Logo from '@/components/Logo.vue'
 
 export default {
   name: 'Header',
   data() {
     return {
-      logo: logo,
-      notloggedUser: false,
-      tokenExists: false
+      active: 0,
+      links: [
+        { name: 'Home', path: '/', condition: true },
+        { name: 'Quero Doar', path: '/search', condition: true },
+        { name: 'Preciso de Ajuda', path: '/requirement', condition: this.loggedUser() },
+        { name: 'Entre ou Cadastre-se', path: '/login', condition: !this.loggedUser() },
+        { name: 'Sair', path: '/', condition: this.loggedUser(), action: this.logOut}
+      ]
     };
-  },
-  mounted() {
-    this.tokenExists = localStorage.getItem('TOKEN_KEY');
-    this.notloggedUser = !this.tokenExists;
   },
   methods: {
     logOut() {
       localStorage.removeItem('TOKEN_KEY');
-      this.$router.go('/');
+      this.$router.go(0);
+    },
+    loggedUser() {
+      return localStorage.getItem('TOKEN_KEY') != null;
     }
+  },
+  components: {
+    Logo
   }
 }
 </script>
