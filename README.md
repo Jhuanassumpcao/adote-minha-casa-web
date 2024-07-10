@@ -2,6 +2,14 @@
 
 This template should help get you started developing with Vue 3 in Vite.
 
+# TODO
+
+- Paginação, acessar n casas de cada vez no back
+- Edição de requisição
+- Deletar requisição
+- Aplicar filtros de pesquisa
+- Envio de comprovante
+
 ## Recommended IDE Setup
 
 [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).

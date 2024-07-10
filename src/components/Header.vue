@@ -1,15 +1,22 @@
 <template>
   <header class="deep-blue text-white">
     <v-container>
-      <v-row align="center" justify="space-between">
-        <v-col cols="auto">
+      <v-row align="center" justify="space-between" no-gutters>
+        <v-col
+          cols="12"
+          md="auto"
+          class="d-flex justify-center justify-md-start"
+        >
           <Logo />
         </v-col>
-        <v-col cols="auto">
-          <v-row>
+        <v-col 
+          cols="12" md="auto"
+          >
+          <v-row no-gutters class="d-flex justify-center">
             <v-col
               v-for="(link, index) in filteredLinks"
               :key="index"
+              cols="auto"
               class="d-flex justify-center"
             >
               <router-link :to="link.path" @click="link.action" class="router-link">
@@ -22,7 +29,6 @@
     </v-container>
   </header>
 </template>
-
 <script>
 import Logo from '@/components/Logo.vue';
 

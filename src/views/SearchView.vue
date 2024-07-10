@@ -10,7 +10,7 @@
         <Album :items="infocards" />
       </v-row>
     </v-container>
-
+    <hr>
     <Footer />
   </v-app>
 </template>
