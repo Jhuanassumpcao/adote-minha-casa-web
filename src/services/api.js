@@ -1,26 +1,20 @@
 import axios from 'axios';
 const isProd = process.env.NODE_ENV === "production";
 
-const apiUrl = "https://adote-minha-casa-api-ef5021418d25.herokuapp.com";
+const apiUrl = "http://127.0.0.1:3333";
 
 const api = axios.create({
     baseURL: apiUrl,
     timeout: 50000,
 });
 
-api.interceptors.request.use(
-
-    (config) => {
-      const token = localStorage.getItem('TOKEN_KEY');
-      console.log(config)
-      config.url = `${config.url}`;
+api.interceptors.request.use( async (config) => {
+    const token = localStorage.getItem('TOKEN_KEY');
+    if(token) {
       config.headers.Authorization = `Bearer ${token}`;
-   
-      return config;
-    },
-    (error) => {
-      return Promise.reject(error);
     }
-);
+   
+    return config;
+});
    
 export default api;
