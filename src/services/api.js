@@ -8,13 +8,21 @@ const api = axios.create({
     timeout: 50000,
 });
 
-api.interceptors.request.use( async (config) => {
+api.interceptors.request.use( 
+  async (config) => {
     const token = localStorage.getItem('TOKEN_KEY');
+    // config.url = `${config.url}`; 
+    
     if(token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-   
+  
     return config;
-});
-   
+  },
+  // (error) => {
+  //   return Promise.reject(error);
+  // }
+);
+
+
 export default api;
