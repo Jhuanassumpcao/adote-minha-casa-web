@@ -37,6 +37,7 @@
 
 <script>
 import Logo from '@/components/Logo.vue'
+import {isUserLoggedIn, removeUserToken, removeUserId} from '@/scripts/user.js'
 
 export default {
   name: 'Header',
@@ -47,9 +48,9 @@ export default {
       links: [
         { name: 'Home', path: '/', condition: true },
         { name: 'Quero Doar', path: '/search', condition: true },
-        { name: 'Preciso de Ajuda', path: '/requirement', condition: this.loggedUser() },
-        { name: 'Entre ou Cadastre-se', path: '/login', condition: !this.loggedUser() },
-        { name: 'Sair', path: '/', condition: this.loggedUser(), action: this.logOut }
+        { name: 'Preciso de Ajuda', path: '/requirement', condition: isUserLoggedIn() },
+        { name: 'Entre ou Cadastre-se', path: '/login', condition: !isUserLoggedIn() },
+        { name: 'Sair', path: '/', condition: isUserLoggedIn(), action: this.logOut }
       ]
     };
   },
@@ -58,11 +59,9 @@ export default {
       this.isCollapsed = !this.isCollapsed;
     },
     logOut() {
-      localStorage.removeItem('TOKEN_KEY');
+      removeUserToken();
+      removeUserId();
       this.$router.go(0);
-    },
-    loggedUser() {
-      return localStorage.getItem('TOKEN_KEY') != null;
     }
   },
   components: {
