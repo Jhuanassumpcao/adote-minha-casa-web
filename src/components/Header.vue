@@ -1,49 +1,51 @@
-<!-- Header.vue -->
 <template>
-  <header class="text-white">
-    <div class="container d-flex justify-content-between align-items-center py-3">
-      <div>
-        <Logo />
-      </div>
-      <nav class="navbar navbar-expand navbar-light wrap">
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav flex-wrap gap-3">
-
-            <li v-for="(link) in links" key="link.name" class="nav-item">
-
-              <router-link class="nav-link text-white btn light-button"
-                v-if="link.condition"
-                :to="link.path" 
-                @click="link.action"
-                >
-                  {{ link.name }}
+  <header class="deep-blue text-white">
+    <v-container>
+      <v-row align="center" justify="space-between">
+        <v-col cols="auto">
+          <Logo />
+        </v-col>
+        <v-col cols="auto">
+          <v-row>
+            <v-col
+              v-for="(link, index) in filteredLinks"
+              :key="index"
+              class="d-flex justify-center"
+            >
+              <router-link :to="link.path" @click="link.action" class="router-link">
+                <v-btn class="mx-2 my-2" outlined text>{{ link.name }}</v-btn>
               </router-link>
-
-            </li>
-
-          </ul>
-        </div>
-      </nav>
-    </div>
+            </v-col>
+          </v-row>
+        </v-col>
+      </v-row>
+    </v-container>
   </header>
 </template>
 
 <script>
-import Logo from '@/components/Logo.vue'
+import Logo from '@/components/Logo.vue';
 
 export default {
   name: 'Header',
+  components: {
+    Logo
+  },
   data() {
     return {
-      active: 0,
       links: [
-        { name: 'Home', path: '/', condition: true },
-        { name: 'Quero Doar', path: '/search', condition: true },
-        { name: 'Preciso de Ajuda', path: '/requirement', condition: this.loggedUser() },
-        { name: 'Entre ou Cadastre-se', path: '/login', condition: !this.loggedUser() },
-        { name: 'Sair', path: '/', condition: this.loggedUser(), action: this.logOut}
+        { name: 'Home', path: '/', condition: () => true },
+        { name: 'Quero Doar', path: '/search', condition: () => true },
+        { name: 'Preciso de Ajuda', path: '/requirement', condition: this.loggedUser },
+        { name: 'Entre ou Cadastre-se', path: '/login', condition: () => !this.loggedUser() },
+        { name: 'Sair', path: '/', condition: this.loggedUser, action: this.logOut }
       ]
     };
+  },
+  computed: {
+    filteredLinks() {
+      return this.links.filter(link => link.condition());
+    }
   },
   methods: {
     logOut() {
@@ -53,21 +55,25 @@ export default {
     loggedUser() {
       return localStorage.getItem('TOKEN_KEY') != null;
     }
-  },
-  components: {
-    Logo
   }
-}
+};
 </script>
 
 <style scoped>
-header {
-  background-color: var(--deep-blue);
+.deep-blue {
+  background-color: var(--deep-blue) !important;
 }
-
-a{
-  color: white;
+.router-link {
+  text-decoration: none;
+}
+.v-btn {
+  color: white !important;
+  background-color: transparent !important;
   font-size: 1.2rem;
-  margin-left: 20px;
+}
+.logo {
+  max-height: 70px;
+  display: flex;
+  align-items: center;
 }
 </style>

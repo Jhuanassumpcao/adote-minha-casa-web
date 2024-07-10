@@ -1,0 +1,35 @@
+:root {
+  --deep-blue: #181e2a;
+  --light-blue: #6577b5;
+  --white-background: #efefef;
+}
+
+.basic-button {
+  background-color: var(--deep-blue) !important;
+  color: white !important;
+}
+
+.light-button {
+  background-color: var(--light-blue);
+  color: var(--deep-blue);
+  padding: 10px;
+}
+
+.login-container {
+  min-width: 40%;
+  max-width: 400px;
+  margin: 0 auto;
+  margin: 50px 0px 50px 0px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form-group {
+  margin-bottom: 10px;
+}
+
+.deep-blue {
+  background-color: var(--deep-blue) !important;
+  color: white !important;
+}

@@ -1,92 +1,76 @@
 <template>
-  <div>
+  <v-app>
     <Header />
+    <v-main>
 
-    <!-- Seções -->
-    <section class="py-5" id="section1">
-      <div class="container text-center">
+    <v-container class="py-5" id="section1">
+      <v-col class="text-center">
         <h2 class="mb-4">Adote Minha Casa</h2>
-        <p style="font-size:25px">Unindo pessoas que precisam de ajuda com pessoas dispostas a ajudar.</p>
-        <div class="d-flex flex-wrap justify-content-evenly">
-          <div class="card">
-            <p>Juntas, ONGs colaboram para transformar vidas e lares.</p>
-          </div>
-          <div class="card">
-            <p>Doar utensílios domésticos e eletrônicos é uma forma de fazer a diferença.</p>
-          </div>
-          <div class="card">
-            <p>Cada contribuição em dinheiro nos aproxima da reforma que sonhamos.</p>
-          </div>
-        </div>
-      </div>
-    </section>
+        <p style="font-size: 25px">
+          Unindo pessoas que precisam de ajuda com pessoas dispostas a ajudar.
+        </p>
+        <v-row justify="center" >
+          <v-col cols="12" md="4">
+            <v-card>
+              <v-card-text>Juntas, ONGs colaboram para transformar vidas e lares.</v-card-text>
+            </v-card>
+          </v-col>
+          <v-col cols="12" md="4">
+            <v-card>
+              <v-card-text
+                >Doar utensílios domésticos e eletrônicos é uma forma de fazer a
+                diferença.</v-card-text
+              >
+            </v-card>
+          </v-col>
+          <v-col cols="12" md="4">
+            <v-card>
+              <v-card-text
+                >Cada contribuição em dinheiro nos aproxima da reforma que sonhamos.</v-card-text
+              >
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-col>
+    </v-container>
 
-    <section class="py-5">
-      <div class="text-center d-flex flex-column align-items-center">
+    <v-container class="py-5">
+      <v-col class="text-center">
         <h2 class="mb-4">Comece a doar</h2>
-        <Carousel :slides="carouselSlides"/>
-        <router-link to="/search" class="btn basicbutton" 
-          style="margin-top: 10px;">Ver mais</router-link>
-      </div>
-    </section>
+        <Carousel/>
+        <router-link to="/search">
+          <v-btn class="basic-button mt-4">Ver mais</v-btn>
+        </router-link>
+      </v-col>
+    </v-container>
     <Footer />
-  </div>
+  </v-main>
+
+  </v-app>
 </template>
 
 <script>
+import { defineComponent } from 'vue'
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
-import InfoCard from '@/components/InfoCard.vue';
-import Carousel from '@/components/Carousel.vue';
-import api from '@/services/api.js';
+import InfoCard from '@/components/InfoCard.vue'
+import Carousel from '@/components/Carousel.vue'
 
-export default {
+export default defineComponent({
   name: 'HomePage',
   components: {
     Header,
     Footer,
     InfoCard,
     Carousel
-  },
-
-  data() {
-    return {
-      carouselSlides: []
-    }
-  },
-  async beforeMount() {
-    try {
-      const { data } = await api.get('/houses');
-
-      this.carouselSlides = data.map(item => {
-        return {
-          component: InfoCard,
-          props: {
-            id: item.id,
-            imageSrc: item.file_url || "https://www.shutterstock.com/image-vector/house-logo-template-design-vector-600nw-741515455.jpg", // Use uma imagem padrão se `file_url` for null
-            title: item.title,
-            description: item.description,
-            ownerName: item.recipient.name,
-            pixkey: item.pixkey
-          }
-        }
-      });
-    } catch (error) {
-      console.error("Erro ao obter dados das casas", error);
-    }
   }
-
- 
-}
+})
 </script>
 
-<style lang="css" src="@/assets/styles/basicbutton.css"></style>
-
 <style scoped>
-
-#section1{
-  background-image: linear-gradient( rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4) ),
-                    url('@/assets/casa.jpg');
+#section1 {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4)),
+    url('@/assets/casa.jpg');
   color: white;
   background-size: cover;
 }
@@ -99,12 +83,20 @@ h2 {
   font-weight: bold;
 }
 
-.card{
+.v-card-text {
+  font-size: 20px;
+}
+
+.v-card{
+  min-height: 100%;
+}
+
+.v-card {
   padding: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
-  max-width: 30%;
+  max-width: 100%;
   font-size: 20px;
 }
 </style>

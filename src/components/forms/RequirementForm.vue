@@ -1,41 +1,58 @@
 <template>
-
-    <div class="login-container">
-      <h1>Iniciar Pedido de Ajuda</h1>
-      <form @submit.prevent="submit">
-        <div class="form-group">
-          <label for="cep">CEP:</label>
-          <input @change="handle_cep" type="text" id="cep" v-model="cep" required>
-        </div>
-        <span id="address_success" style="display:none">
-        </span>
-        <span id="address_fail" style="display:none">
-            <p style="color:red;">Informe um CEP válido</p>
-        </span>
-        <div class="form-group">
-          <label for="value">Estimativa para reparação:</label>
-          <input type="text" id="value" v-model="value" required>
-        </div>
-        <div class="form-group">
-          <label for="title">Breve descrição:</label>
-          <input type="text" id="title" v-model="title" required>
-        </div>
-        <div class="form-group">
-          <label for="text">Descrição detalhada:</label>
-          <input type="text" id="text" v-model="description" required>
-        </div>
-        <div class="form-group">
-          <label for="pix">Chave Pix:</label>
-          <input type="text" id="pix" v-model="pix" required>
-        </div>
-        <div class="form-group">
-          <label for="phoneNumber">Whatzapp:</label>
-          <input type="text" id="phoneNumber" v-model="phoneNumber" required>
-        </div>
-        
-        <button type="submit" class="btn basicbutton">Abrir Requerimento</button>
-      </form>
-    </div>
+  <v-app>
+    <v-container class="login-container d-flex flex-column align-center justify-center">
+      <v-card class="pa-4" max-width="600">
+        <v-card-title>
+          <h1>Iniciar Pedido de Ajuda</h1>
+        </v-card-title>
+        <v-card-text>
+          <v-form @submit.prevent="submit">
+            <v-text-field
+              v-model="cep"
+              label="CEP"
+              @change="handleCep"
+              required
+            ></v-text-field>
+            <v-alert v-if="cepError" type="error" dismissible>
+              Informe um CEP válido
+            </v-alert>
+            <v-alert v-if="cepSuccess" type="success" dismissible>
+              <p>Rua: {{ address }}</p>
+              <p>Bairro: {{ bairro }}</p>
+              <p>Cidade: {{ city }}</p>
+              <p>Estado: {{ state }}</p>
+            </v-alert>
+            <v-text-field
+              v-model="value"
+              label="Estimativa para reparação"
+              required
+            ></v-text-field>
+            <v-text-field
+              v-model="title"
+              label="Breve descrição"
+              required
+            ></v-text-field>
+            <v-textarea
+              v-model="description"
+              label="Descrição detalhada"
+              required
+            ></v-textarea>
+            <v-text-field
+              v-model="pix"
+              label="Chave Pix"
+              required
+            ></v-text-field>
+            <v-text-field
+              v-model="phoneNumber"
+              label="WhatsApp"
+              required
+            ></v-text-field>
+            <v-btn type="submit" class="basic-button mt-4">Abrir Requerimento</v-btn>
+          </v-form>
+        </v-card-text>
+      </v-card>
+    </v-container>
+  </v-app>
 </template>
 
 <script>
@@ -46,17 +63,17 @@ export default {
   data() {
     return {
       cep: '',
-        city: '',
-        bairro: '',
-        address: '',
-        state: '',
-
-
+      city: '',
+      bairro: '',
+      address: '',
+      state: '',
       value: '',
       title: '',
       description: '',
       pix: '',
-      phoneNumber: ''
+      phoneNumber: '',
+      cepError: false,
+      cepSuccess: false,
     };
   },
   methods: {
@@ -78,61 +95,63 @@ export default {
         "bairro": this.bairro,
         "cep": this.cep,
         "number": this.phoneNumber
-        //
       };
-      const response = await api.post('/houses', data);
-      //clean the form
-      this.cep = '';
-      this.city = '';
-      this.bairro = '';
-      this.address = '';
-      this.state = '';
-      this.value = '';
-      this.title = '';
-      this.description = '';
-      this.pix = '';
-      this.phoneNumber = '';
-      
+      try {
+        const response = await api.post('/houses', data);
+        // Clean the form
+        this.cep = '';
+        this.city = '';
+        this.bairro = '';
+        this.address = '';
+        this.state = '';
+        this.value = '';
+        this.title = '';
+        this.description = '';
+        this.pix = '';
+        this.phoneNumber = '';
+        this.cepError = false;
+        this.cepSuccess = false;
+      } catch (error) {
+        console.error('Error submitting form:', error);
+      }
     },
-
-    handle_cep(event) {
-  		const value = event.target.value;
+    async handleCep(event) {
+      const value = event.target.value;
       const url = `https://viacep.com.br/ws/${value}/json/`;
+      this.cepError = false;
+      this.cepSuccess = false;
 
-      const errorElement = document.getElementById('address_fail');
-      const successElement = document.getElementById('address_success');
-      successElement.innerHTML = '';
-      errorElement.innerHTML = '';
-      fetch(url)
-      .then( response => response.json())
-      .then( json => {
-      		
-          if( json.logradouro ) {
-            console.log(json)
-            errorElement.style.display = 'none';
-            successElement.style.display = 'block';
-            successElement.innerHTML = `
-              <p>Rua: ${json.logradouro}</p>
-              <p>Bairro: ${json.bairro}</p>
-              <p>Cidade: ${json.localidade}</p>
-              <p>Estado: ${json.uf}</p>
-              <hr>
-            `;
+      try {
+        const response = await fetch(url);
+        const json = await response.json();
 
-            this.cep = json.cep;
-            this.city = json.localidade;
-            this.bairro = json.bairro;
-            this.address = json.logradouro;
-            this.state = json.uf;
-          }
-      }).catch( _ => {
-        errorElement.style.display = 'block';
-        successElement.style.display = 'none';
-
-      });
-    }
-  }
+        if (json.logradouro) {
+          this.cepSuccess = true;
+          this.cepError = false;
+          this.cep = json.cep;
+          this.city = json.localidade;
+          this.bairro = json.bairro;
+          this.address = json.logradouro;
+          this.state = json.uf;
+        } else {
+          this.cepError = true;
+          this.cepSuccess = false;
+        }
+      } catch (error) {
+        this.cepError = true;
+        this.cepSuccess = false;
+      }
+    },
+  },
 };
 </script>
 
-<style lang="css" scoped src="@/assets/styles/form.css"></style>
+<style scoped>
+.login-container {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>

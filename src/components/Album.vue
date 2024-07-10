@@ -1,16 +1,16 @@
 <template>
-  <div class="container">
-    <div class="row gap-5 w-100 justify-content-center">
+  <v-container>
+    <v-row class="gap-5" justify="center">
       <component
-        :class="colClass"
         v-for="(item, index) in items"
         :key="index"
         :is="item.component"
         v-bind="item.props"
+        class="d-flex"
       >
       </component>
-    </div>
-  </div>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -20,6 +20,10 @@ export default {
     items: {
       type: Array,
       required: true
+    },
+    colClass: {
+      type: String,
+      default: 'col'
     }
   }
 }

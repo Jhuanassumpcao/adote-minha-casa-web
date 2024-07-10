@@ -7,11 +7,7 @@ import { RouterLink, RouterView } from 'vue-router'
 </template>
 
 <style>
-:root{
-  --deep-blue: #181e2a;
-  --light-blue: #6577b5;
-  --white-background: #EFEFEF;
-}
+
 
 body {
   font-family: Avenir, Helvetica, Arial, sans-serif;

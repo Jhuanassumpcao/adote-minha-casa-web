@@ -1,20 +1,27 @@
 <template>
-  <Header />
-  <main class="d-flex justify-content-evenly py-5">
-    <RequirementForm />
-    <aside id="aside1" class="w-50 align-content-center text-white d-none d-md-block">
-      <h2 class="text-center">Contecte-se com Doadores do Brasil Inteiro</h2>
-      <p class="text-center">Se você precisa de ajuda, preencha o formulário</p>
-    </aside>
-  </main>
-
-  <Footer />
+  <v-app>
+    <Header />
+    <v-main>
+      <v-container>
+        <v-row class="py-5" justify="space-between">
+          <v-col cols="12" md="6">
+            <RequirementForm />
+          </v-col>
+          <v-col cols="12" md="5" class="d-none d-md-flex flex-column justify-center align-center aside-background">
+            <h2 class="text-center white--text">Conecte-se com Doadores do Brasil Inteiro</h2>
+            <p class="text-center white--text">Se você precisa de ajuda, preencha o formulário</p>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-main>
+    <Footer />
+  </v-app>
 </template>
 
 <script>
-import Header from '@/components/Header.vue'
-import Footer from '@/components/Footer.vue'
-import RequirementForm from '@/components/forms/RequirementForm.vue'
+import Header from '@/components/Header.vue';
+import Footer from '@/components/Footer.vue';
+import RequirementForm from '@/components/forms/RequirementForm.vue';
 
 export default {
   name: 'Login',
@@ -27,12 +34,11 @@ export default {
 </script>
 
 <style scoped>
-#aside1{
-  background-image: 
-  linear-gradient( rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2) ), url('@/assets/maos.jpg');
-  color: white;
+.aside-background {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('@/assets/maos.jpg');
   background-size: cover;
   background-position: center;
   border-radius: 50px;
+  color: white;
 }
 </style>

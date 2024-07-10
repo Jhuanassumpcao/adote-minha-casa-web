@@ -1,26 +1,34 @@
 <template>
-  <div class="container py-5">
+  <v-container class="py-5">
     <!-- Select de estados -->
-    <select v-model="selectedState" class="form-select" id="states" @change="updateCities">
-      <option value="" disabled>Selecione um estado</option>
-      <option v-for="state in states" :key="state" :value="state">{{ state }}</option>
-    </select>
+    <v-select
+      v-model="selectedState"
+      :items="states"
+      label="Selecione um estado"
+      outlined
+      dense
+    ></v-select>
 
     <!-- Select de cidades -->
-    <select v-model="selectedCity" class="form-select mt-3" id="cities" :disabled="!selectedState">
-      <option value="" disabled>Selecione uma cidade</option>
-      <option v-for="city in cities" :key="city" :value="city">{{ city }}</option>
-    </select>
+    <v-select
+      v-model="selectedCity"
+      :items="cities"
+      label="Selecione uma cidade"
+      :disabled="!selectedState"
+      class="mt-3"
+      outlined
+      dense
+    ></v-select>
 
     <!-- Botão "Aplicar Filtros" com route-link -->
-    <router-link :to="{ name: 'search'}" tag="button" class="btn basicbutton mt-3">
+    <v-btn :to="{name: 'search'}" class="basic-button mt-3" outlined>
       Aplicar Filtros
-    </router-link>
-  </div>
+    </v-btn>
+  </v-container>
 </template>
 
 <script>
-import { getStates, getCities } from '@/scripts/estados.js';
+import { getStates, getCities } from '@/scripts/cep.js';
 export default {
   data() {
     return {
@@ -33,15 +41,15 @@ export default {
   async created() {
     this.states = await getStates();
   },
+  watch: {
+    selectedState(newVal) {
+      this.updateCities(newVal);
+    }
+  },
   methods: {
     async updateCities() {
       this.cities = await getCities(this.selectedState);
     }
   },
-  
 };
 </script>
-
-<style scoped>
-/* Estilos específicos do componente podem ser adicionados aqui */
-</style>

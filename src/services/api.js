@@ -12,7 +12,6 @@ api.interceptors.request.use(
 
     (config) => {
       const token = localStorage.getItem('TOKEN_KEY');
-      console.log(api)
       console.log(config)
       config.url = `${config.url}`;
       config.headers.Authorization = `Bearer ${token}`;

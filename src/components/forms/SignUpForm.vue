@@ -1,69 +1,75 @@
 <template>
-
-    <div class="login-container">
-      <h1>Crie uma conta</h1>
-      <form @submit.prevent="sign_up">
-        <div class="form-group">
-          <label for="signemail">Email:</label>
-          <input type="email" id="signemail" v-model="email" required>
-        </div>
-        <div class="form-group">
-          <label for="signname">Nome:</label>
-          <input type="text" id="signname" v-model="name" required>
-        </div>
-        <div class="form-group">
-          <label for="phone">Telefone:</label>
-          <input type="text" id="phone" v-model="phone" required>
-        </div>
-
-        <div class="form-group">
-          <label for="state">Estado:</label>
-          <select v-model="state" class="form-select" 
-            id="state" 
-            @change="updateCities"
-            required>
-            <option v-for="state in stateList" :key="state" :value="state">{{ state }}</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="cities">Cidade:</label>
-          <select v-model="city" class="form-select">
-                class="form-select mt-3" id="cities" 
-                :disabled="!state"
-                required>
-            <option v-for="city in cityList" :key="city" :value="city">{{ city }}</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="signpassword">Senha:</label>
-          <input type="password" id="signpassword" v-model="password" required>
-        </div>
-        <div class="form-group">
-          <label for="signpassword2">Confirme sua senha:</label>
-          <input type="password" id="signpassword2" v-model="passwordConf" required>
-        </div>
-
-        <span id="signup_fail" style="display:none">
-            <!-- <p style="color:red;">Erro ao se cadastrar</p> -->
-        </span>
-        <span id="signup_password_fail" style="display:none">
-            <p style="color:red;">Senhas não conferem</p>
-        </span>
-
-        <button type="submit" class="btn basicbutton">SignUp</button>
-      </form>
-    </div>
-
+  <v-app>
+    <v-container class="login-container d-flex flex-column align-center justify-center">
+      <v-card class="pa-4" min-width="400">
+        <v-card-title>
+          <h1>Crie uma conta</h1>
+        </v-card-title>
+        <v-card-text>
+          <v-form @submit.prevent="signUp">
+            <v-text-field
+              v-model="email"
+              label="Email"
+              type="email"
+              required
+            ></v-text-field>
+            <v-text-field
+              v-model="name"
+              label="Nome"
+              type="text"
+              required
+            ></v-text-field>
+            <v-text-field
+              v-model="phone"
+              label="Telefone"
+              type="text"
+              required
+            ></v-text-field>
+            <v-select
+              v-model="state"
+              :items="stateList"
+              label="Estado"
+              required
+            ></v-select>
+            <v-select
+              v-model="city"
+              :items="cityList"
+              label="Cidade"
+              :disabled="!state"
+              required
+            ></v-select>
+            <v-text-field
+              v-model="password"
+              label="Senha"
+              type="password"
+              required
+            ></v-text-field>
+            <v-text-field
+              v-model="passwordConf"
+              label="Confirme sua senha"
+              type="password"
+              required
+            ></v-text-field>
+            <v-alert v-if="passwordMismatch" type="error" dismissible>
+              Senhas não conferem
+            </v-alert>
+            <v-alert v-if="signupError" type="error" dismissible>
+              {{ signupError }}
+            </v-alert>
+            <v-btn type="submit" class="basic-button mt-4">SignUp</v-btn>
+          </v-form>
+        </v-card-text>
+      </v-card>
+    </v-container>
+  </v-app>
 </template>
 
 <script>
 import api from '@/services/api.js';
-import { getStates, getCities } from '@/scripts/estados.js';
+import { getStates, getCities } from '@/scripts/cep.js';
 
 export default {
-  name: 'SignUp',
+  name: 'SignUpForm',
   data() {
     return {
       email: '',
@@ -75,69 +81,90 @@ export default {
       state: '',
       stateList: [],
       cityList: [],
+      passwordMismatch: false,
+      signupError: '',
     };
   },
   async created() {
-    this.stateList = await getStates();
-  },
-  methods: {
-    async updateCities() {
-      this.cityList = await getCities(this.state);
-    },
-    async sign_up() {
-      const errMessage = document.getElementById('signup_fail');
-      const passErrorMessage = document.getElementById('signup_password_fail');
-      
-      errMessage.style.display = 'none';
-      passErrorMessage.style.display = 'none';
-
-      const data = {
-        "email": this.email,
-        "name": this.name,
-        "state": this.state,
-        "city": this.city,
-        "phone": this.phone,
-        "password": this.password,
-      }
-
-      if (this.password !== this.passwordConf) {
-        console.log('Senhas não conferem');
-        passErrorMessage.style.display = 'block';
-      }else{
-        try{
-          //user register
-          const response = await api.post('/recipients', data);
-
-          //user login
-          const responselogin = await api.post('/login', {
-            email: this.email,
-            password: this.password
-          })
-
-          //clean the form
-          this.email = '';
-          this.name = '';
-          this.password = '';
-          this.passwordConf = '';
-          this.phone = '';
-          this.city = '';
-          this.state = '';
-
-          localStorage.setItem('TOKEN_KEY', response.data.token.token);
-          localStorage.setItem('USER_ID', response.data.user_id);
-          
-          this.$router.push(`/requirement`);
-        } catch (error){
-
-          console.log(error);
-          errMessage.style.display = 'block';
-          errMessage.innerHTML = "<p style=\"color:red\">" + error.response.data.errors[0].message + "</p>";
-          
-        }
-      }
+    try {
+      this.stateList = await getStates();
+      console.log('States:', this.stateList);
+    } catch (error) {
+      console.error('Failed to fetch states:', error);
     }
   },
+  watch: {
+    state(newVal) {
+      this.updateCities(newVal);
+    }
+  },
+  methods: {
+    async updateCities(state) {
+      if (state) {
+        try {
+          console.log('Fetching cities for state:', state);
+          this.cityList = await getCities(state);
+          console.log('Cities:', this.cityList);
+        } catch (error) {
+          console.error('Failed to fetch cities:', error);
+        }
+      }
+    },
+    async signUp() {
+      this.passwordMismatch = false;
+      this.signupError = '';
+
+      if (this.password !== this.passwordConf) {
+        this.passwordMismatch = true;
+        return;
+      }
+
+      const data = {
+        email: this.email,
+        name: this.name,
+        state: this.state,
+        city: this.city,
+        phone: this.phone,
+        password: this.password,
+      };
+
+      try {
+        // User registration
+        await api.post('/recipients', data);
+
+        // User login
+        const responseLogin = await api.post('/login', {
+          email: this.email,
+          password: this.password,
+        });
+
+        // Clean the form
+        this.email = '';
+        this.name = '';
+        this.password = '';
+        this.passwordConf = '';
+        this.phone = '';
+        this.city = '';
+        this.state = '';
+
+        localStorage.setItem('TOKEN_KEY', responseLogin.data.token.token);
+        localStorage.setItem('USER_ID', responseLogin.data.user_id);
+
+        this.$router.push(`/requirement`);
+      } catch (error) {
+        this.signupError = error.response.data.errors[0].message || 'Erro ao se cadastrar';
+      }
+    }
+  }
 };
 </script>
 
-<style lang="css" scoped src="@/assets/styles/form.css"></style>
+<style scoped>
+.login-container {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>

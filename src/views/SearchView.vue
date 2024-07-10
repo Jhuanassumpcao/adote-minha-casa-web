@@ -1,23 +1,27 @@
 <template>
-  <div>
+  <v-app>
     <Header />
     <!-- Navbar de filtro de pesquisa -->
     <SearchFilters />
 
     <!-- Conteúdo -->
-    <Album :items=carouselSlides />
+    <v-container>
+      <v-row>
+        <Album :items="infocards" />
+      </v-row>
+    </v-container>
 
     <Footer />
-  </div>
+  </v-app>
 </template>
 
 <script>
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
-import InfoCard from '@/components/InfoCard.vue';
-import Album from '@/components/Album.vue';
-import SearchFilters from '@/components/SearchFilters.vue';
-import api from '@/services/api.js';
+import InfoCard from '@/components/InfoCard.vue'
+import Album from '@/components/Album.vue'
+import SearchFilters from '@/components/SearchFilters.vue'
+import api from '@/services/api.js'
 
 export default {
   name: 'SearchPage',
@@ -28,41 +32,37 @@ export default {
     Album,
     SearchFilters
   },
-
   data() {
     return {
-      carouselSlides: []
+      infocards: []
     }
   },
   async beforeMount() {
     try {
-      const { data } = await api.get('/houses');
-      console.log("printando casaaa", data);
+      const { data } = await api.get('/houses')
 
-      this.carouselSlides = data.map(item => {
+      this.infocards = data.map((item) => {
         return {
           component: InfoCard,
           props: {
             id: item.id.toString(),
-            imageSrc: item.file_url || "https://www.shutterstock.com/image-vector/house-logo-template-design-vector-600nw-741515455.jpg", // Use uma imagem padrão se `file_url` for null
+            imageSrc: 'https://www.shutterstock.com/image-vector/house-logo-template-design-vector-600nw-741515455.jpg',
             title: item.title,
             description: item.description,
-            ownerName: item.recipient.name, // Ajuste conforme necessário
+            ownerName: item.recipient.name,
             pixkey: item.pixkey
           }
         }
-      });
+      })
     } catch (error) {
-      console.error("Erro ao obter dados das casas", error);
+      console.error('Erro ao obter dados das casas', error)
     }
   }
-
 }
 </script>
 
 <style scoped>
-
-#section1{
+#section1 {
   background-image: url('../assets/cerca.jpg');
   color: white;
   background-size: cover;

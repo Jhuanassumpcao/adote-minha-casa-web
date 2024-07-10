@@ -1,22 +1,33 @@
 <template>
-    <div class="login-container">
-      <h1>Login</h1>
-      <form @submit.prevent="login">
-        <div class="form-group">
-          <label for="email">Email:</label>
-          <input type="email" id="email" v-model="email" required>
-        </div>
-        <div class="form-group">
-          <label for="password">Senha:</label>
-          <input type="password" id="password" v-model="password" required>
-        </div>
-        <span id="login_fail" style="display:none">
-            <p style="color:red;">Email ou senha inválidos</p>
-        </span>
-        <button type="submit" class="btn basicbutton" @click="login">Login</button>
-      </form>
-    </div>
-
+  <v-app>
+    <v-container class="login-container d-flex flex-column align-center justify-center">
+      <v-card class="pa-4" min-width="400">
+        <v-card-title>
+          <h1>Login</h1>
+        </v-card-title>
+        <v-card-text>
+          <v-form @submit.prevent="login">
+            <v-text-field
+              v-model="email"
+              label="Email"
+              type="email"
+              required
+            ></v-text-field>
+            <v-text-field
+              v-model="password"
+              label="Senha"
+              type="password"
+              required
+            ></v-text-field>
+            <v-alert v-if="loginFail" type="error" dismissible>
+              Email ou senha inválidos
+            </v-alert>
+            <v-btn type="submit" class="basic-button mt-4">Login</v-btn>
+          </v-form>
+        </v-card-text>
+      </v-card>
+    </v-container>
+  </v-app>
 </template>
 
 <script>
@@ -26,10 +37,9 @@ export default {
   name: 'Login',
   data() {
     return {
-      model: {
-        email: "",
-        password: "",
-      },
+      email: "",
+      password: "",
+      loginFail: false,
     };
   },
   methods: {
@@ -38,24 +48,31 @@ export default {
         email: this.email,
         password: this.password,
       };
-      try{
-        console.log(data)
+      try {
+        console.log(data);
         const response = await api.post('/login', data);
         localStorage.setItem('TOKEN_KEY', response.data.token.token);
         localStorage.setItem('USER_ID', response.data.user_id);
         this.$router.push(`/`);
-        //clean the form
+        // Clean the form
         this.email = '';
         this.password = '';
-
+        this.loginFail = false;
         console.log("LOGIN FEITO COM SUCESSO", response);
       } catch (error) {
-        document.getElementById('login_fail').style.display = 'block';
+        this.loginFail = true;
       }
-
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style lang="css" scoped src="@/assets/styles/form.css"></style>
+<style scoped>
+.login-container {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>
