@@ -78,13 +78,13 @@ export default {
   },
   methods: {
     async submit() {
-      const user_id = localStorage.getItem('USER_ID');
-      if (!user_id) {
+      const token = localStorage.getItem('TOKEN_KEY');
+      if (!token) {
         alert('Você precisa estar logado para fazer um pedido de ajuda');
         return;
       }
+
       const data = {
-        "cadastred_by_user_id": user_id,
         "title": this.title,
         "description": this.description,
         "pixkey": this.pix,
@@ -96,6 +96,7 @@ export default {
         "cep": this.cep,
         "number": this.phoneNumber
       };
+      
       try {
         const response = await api.post('/houses', data);
         // Clean the form

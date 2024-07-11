@@ -37,7 +37,7 @@
 
 <script>
 import Logo from '@/components/Logo.vue'
-import {isUserLoggedIn, removeUserToken, removeUserId} from '@/scripts/user.js'
+import {isUserLoggedIn, removeUserToken} from '@/scripts/user.js'
 
 export default {
   name: 'Header',
@@ -60,7 +60,6 @@ export default {
     },
     logOut() {
       removeUserToken();
-      removeUserId();
       this.$router.go(0);
     }
   },

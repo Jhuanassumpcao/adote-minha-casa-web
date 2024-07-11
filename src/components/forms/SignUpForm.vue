@@ -138,6 +138,8 @@ export default {
           password: this.password,
         });
 
+        console.log(responseLogin)
+
         // Clean the form
         this.email = '';
         this.name = '';
@@ -147,11 +149,11 @@ export default {
         this.city = '';
         this.state = '';
 
-        localStorage.setItem('TOKEN_KEY', responseLogin.data.token.token);
-        localStorage.setItem('USER_ID', responseLogin.data.user_id);
+        localStorage.setItem('TOKEN_KEY', responseLogin.data.token);
 
         this.$router.push(`/requirement`);
       } catch (error) {
+        console.log(error)
         this.signupError = error.response.data.errors[0].message || 'Erro ao se cadastrar';
       }
     }
