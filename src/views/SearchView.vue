@@ -1,19 +1,44 @@
 <template>
   <v-app>
     <Header />
-    <!-- Navbar de filtro de pesquisa -->
-    <SearchFilters />
 
-    <!-- Conteúdo -->
-    <v-container>
-      <v-row>
-        <Album :items="infocards" />
-      </v-row>
-    </v-container>
+    <v-main>
+      <SearchFilters />
+
+      <v-container>
+        <v-row v-if="!loading && infocards.length > 0">
+          <Album :items="infocards" />
+        </v-row>
+
+        <v-row justify="center" v-if="loading">
+          <v-progress-circular
+            indeterminate
+            color="primary"
+          ></v-progress-circular>
+        </v-row>
+
+        <v-row justify="center" v-if="!loading && infocards.length === 0">
+          <v-alert type="warning">
+            Nenhuma casa encontrada.
+          </v-alert>
+        </v-row>
+
+        <v-row justify="center">
+          <v-pagination
+            :v-model="$route.query.page"
+            rounded="circle"
+            :length="totalPages"
+            @update:model-value="changePage"
+          />
+        </v-row>
+      </v-container>
+    </v-main>
+
     <hr>
     <Footer />
   </v-app>
 </template>
+
 
 <script>
 import Header from '@/components/Header.vue'
@@ -35,30 +60,46 @@ export default {
   
   data() {
     return {
-      infocards: []
+      infocards: [],
+      totalPages: 1,
+      loading: false
     }
   },
 
   watch: {
     '$route.query': 'fetchHouses'
   },
+  
   async created() {
     await this.fetchHouses();
   },
 
   methods: {
+    readQuery(){
+      if (!this.$route.query.page) {
+        this.$router.replace({ query: { ...this.$route.query, page: 1 } });
+      } 
+      const { state, city, maxValue, perPage, page } = this.$route.query;
+
+      const params = { state, city, maxValue, perPage, page };
+      return params;
+    },
+
+    changePage(newPage){
+      console.log('Nova página', newPage);
+      this.$router.replace({ query: { ...this.$route.query, page: newPage } });
+    },
+
     async fetchHouses() {
+      this.loading = true;
       try {
-        const { state, city, maxValue, perPage } = this.$route.query;
-        const params = { state, city, maxValue, perPage };
+        const params = this.readQuery();
 
-        const {data} = await api.get('/houses', {params: params})
+        const { data } = await api.get('/houses', { params });
 
-        const hdata = data.data
-        const meta = data.meta
-        
-        console.log('Dados das casas', hdata)
-        console.log('Metadados das casas', meta)
+        const hdata = data.data;
+        const meta = data.meta;
+        this.totalPages = meta.last_page;
 
         this.infocards = hdata.map((item) => {
           return {
@@ -72,11 +113,20 @@ export default {
               pixkey: item.pixkey
             }
           }
-        })
+        });
       } catch (error) {
-        console.error('Erro ao obter dados das casas', error)
+        console.error('Erro ao obter dados das casas', error);
+      }finally{
+        this.loading = false;
       }
     }
   }
 }
 </script>
+
+<style scoped>
+/* hide pagination numbers */
+li.VuePagination__pagination-item:not(.VuePagination__pagination-item-prev-page):not(.VuePagination__pagination-item-prev-chunk):not(.VuePagination__pagination-item-next-page):not(.VuePagination__pagination-item-next-chunk) {
+  display: none;
+}
+</style>

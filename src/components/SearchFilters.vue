@@ -23,6 +23,7 @@
       label="Valor máximo"
       type="number"
       class="mt-3"
+      min="0"
       outlined
       dense
     ></v-text-field>
@@ -31,6 +32,8 @@
       v-model="itemsPerPage"
       label="Itens por página"
       type="number"
+      min="1"
+      max="50"
       class="mt-3"
       outlined
       dense
@@ -58,6 +61,7 @@ export default {
   },
   async created() {
     this.states = await getStates();
+    this.updateFromRouter();
   },
   watch: {
     selectedState(newVal) {
@@ -83,6 +87,12 @@ export default {
       });
 
       this.$router.push({ name: 'search', query: queryParams });
+    },
+    updateFromRouter(){
+      this.selectedState = this.$route.query.state;
+      this.selectedCity = this.$route.query.city;
+      this.maxValue = this.$route.query.maxValue;
+      this.itemsPerPage = this.$route.query.perPage;
     }
   },
 };
