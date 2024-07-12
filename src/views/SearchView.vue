@@ -32,47 +32,51 @@ export default {
     Album,
     SearchFilters
   },
+  
   data() {
     return {
       infocards: []
     }
   },
-  async beforeMount() {
-    try {
-      const { data } = await api.get('/houses')
 
-      this.infocards = data.map((item) => {
-        return {
-          component: InfoCard,
-          props: {
-            id: item.id.toString(),
-            imageSrc: 'https://www.shutterstock.com/image-vector/house-logo-template-design-vector-600nw-741515455.jpg',
-            title: item.title,
-            description: item.description,
-            ownerName: item.recipient.name,
-            pixkey: item.pixkey
+  watch: {
+    '$route.query': 'fetchHouses'
+  },
+  async created() {
+    await this.fetchHouses();
+  },
+
+  methods: {
+    async fetchHouses() {
+      try {
+        const { state, city, maxValue, perPage } = this.$route.query;
+        const params = { state, city, maxValue, perPage };
+
+        const {data} = await api.get('/houses', {params: params})
+
+        const hdata = data.data
+        const meta = data.meta
+        
+        console.log('Dados das casas', hdata)
+        console.log('Metadados das casas', meta)
+
+        this.infocards = hdata.map((item) => {
+          return {
+            component: InfoCard,
+            props: {
+              id: item.id.toString(),
+              imageSrc: 'https://www.shutterstock.com/image-vector/house-logo-template-design-vector-600nw-741515455.jpg',
+              title: item.title,
+              description: item.description,
+              ownerName: item.recipient.name,
+              pixkey: item.pixkey
+            }
           }
-        }
-      })
-    } catch (error) {
-      console.error('Erro ao obter dados das casas', error)
+        })
+      } catch (error) {
+        console.error('Erro ao obter dados das casas', error)
+      }
     }
   }
 }
 </script>
-
-<style scoped>
-#section1 {
-  background-image: url('../assets/cerca.jpg');
-  color: white;
-  background-size: cover;
-}
-
-h2 {
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 3em;
-  text-transform: uppercase;
-  margin-top: 20px;
-  font-weight: bold;
-}
-</style>
