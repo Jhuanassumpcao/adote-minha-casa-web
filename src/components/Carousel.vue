@@ -4,13 +4,15 @@
       <v-col cols="12">
         <v-carousel hide-delimiters height="400px">
           <v-carousel-item
+
             v-for="(slide, index) in infocards"
-            :key="index"
-          >
+            :key="index">
+
             <component
               :is="slide.component"
               v-bind="slide.props"
             />
+
           </v-carousel-item>
         </v-carousel>
       </v-col>
@@ -29,11 +31,11 @@ export default {
       infocards: []
     };
   },
-  async beforeMount() {
+  async beforeCreate() {
     try {
-      const { data } = await api.get('/houses')
+      const { data } = await api.get('/houses', { params: { perPage: 10 } });
 
-      this.infocards = data.map((item) => {
+      this.infocards = data.data.map((item) => {
         return {
           component: InfoCard,
           props: {
@@ -45,45 +47,11 @@ export default {
             pixkey: item.pixkey
           }
         }
-      })
+      });
+
     } catch (error) {
       console.error('Erro ao obter dados das casas', error)
     }
   }
 };
 </script>
-
-<style scoped>
-.carousel {
-  position: relative;
-  overflow: hidden;
-  width: 95%;
-}
-
-.carousel-button {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: var(--deep-blue);
-  color: white;
-  border: none;
-  padding: 10px;
-  cursor: pointer;
-}
-
-.carousel-button.prev {
-  left: 0;
-}
-
-.carousel-button.next {
-  right: 0;
-}
-
-#carousel-3-items {
-  display: flex;
-  justify-content: center;
-  transition: transform 0.5s;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-</style>
