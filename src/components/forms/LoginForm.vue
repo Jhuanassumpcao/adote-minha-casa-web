@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import api from '@/services/api.js';
+import login from '@/services/login.js';
 
 export default {
   name: 'Login',
@@ -49,19 +49,16 @@ export default {
         password: this.password,
       };
       try {
-        console.log(data);
-        const response = await api.post('/login', data);
-        console.log(response);
-        localStorage.setItem('TOKEN_KEY', response.data.token);
+        await login(data);
         
         this.$router.push(`/`);
-        // Clean the form
+
         this.email = '';
         this.password = '';
         this.loginFail = false;
-        console.log("LOGIN FEITO COM SUCESSO", response);
       } catch (error) {
         this.loginFail = true;
+        console.log(error);
       }
     },
   },

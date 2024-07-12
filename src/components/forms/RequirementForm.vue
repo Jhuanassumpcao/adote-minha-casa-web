@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import api from '@/services/api.js';
+import addHouse from '@/services/houses.js';
 
 export default {
   name: 'RequirementForm',
@@ -98,7 +98,7 @@ export default {
       };
       
       try {
-        const response = await api.post('/houses', data);
+        await addHouse(data);
         // Clean the form
         this.cep = '';
         this.city = '';

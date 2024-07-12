@@ -65,7 +65,8 @@
 </template>
 
 <script>
-import api from '@/services/api.js';
+import login from '@/services/login.js';
+import signIn from '@/services/signIn.js';
 import { getStates, getCities } from '@/scripts/cep.js';
 
 export default {
@@ -88,28 +89,22 @@ export default {
   async created() {
     try {
       this.stateList = await getStates();
-      console.log('States:', this.stateList);
     } catch (error) {
       console.error('Failed to fetch states:', error);
     }
   },
   watch: {
-    state(newVal) {
-      this.updateCities(newVal);
-    }
-  },
-  methods: {
-    async updateCities(state) {
-      if (state) {
+    async state(newVal) {
+      if (newVal) {
         try {
-          console.log('Fetching cities for state:', state);
-          this.cityList = await getCities(state);
-          console.log('Cities:', this.cityList);
+          this.cityList = await getCities(newVal);
         } catch (error) {
           console.error('Failed to fetch cities:', error);
         }
       }
-    },
+    }
+  },
+  methods: {
     async signUp() {
       this.passwordMismatch = false;
       this.signupError = '';
@@ -119,26 +114,24 @@ export default {
         return;
       }
 
-      const data = {
+      const signInData = {
         email: this.email,
         name: this.name,
         state: this.state,
         city: this.city,
         phone: this.phone,
-        password: this.password,
+        password: this.password
       };
 
+      const loginData = {
+          email: this.email,
+          password: this.password
+      };
+      
       try {
         // User registration
-        await api.post('/recipients', data);
-
-        // User login
-        const responseLogin = await api.post('/login', {
-          email: this.email,
-          password: this.password,
-        });
-
-        console.log(responseLogin)
+        await signIn(signInData);
+        await login(loginData);
 
         // Clean the form
         this.email = '';
@@ -149,11 +142,9 @@ export default {
         this.city = '';
         this.state = '';
 
-        localStorage.setItem('TOKEN_KEY', responseLogin.data.token);
-
         this.$router.push(`/requirement`);
       } catch (error) {
-        console.log(error)
+        console.log(error);
         this.signupError = error.response.data.errors[0].message || 'Erro ao se cadastrar';
       }
     }
