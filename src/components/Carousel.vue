@@ -1,31 +1,28 @@
 <template>
   <v-container class="py-5">
-    <v-row>
+    <v-row v-if="infocards.length > 0">
       <v-col cols="12">
-        <div class="custom-carousel">
-          <v-btn icon @click="prev">
-            <v-icon>mdi-chevron-left</v-icon>
-          </v-btn>
+        <v-carousel hide-delimiters height="400px">
+          <v-carousel-item
+            v-for="(slide, index) in infocards"
+            :key="index">
 
-          <div class="carousel-wrapper">
-            <div class="carousel-inner" :style="carouselStyle">
-              <v-col
-                v-for="(slide, index) in visibleInfocards"
-                :key="index"
-                cols="4"
-              >
-                <component
-                  :is="slide.component"
-                  v-bind="slide.props"
-                />
-              </v-col>
-            </div>
-          </div>
+            <component
+              :is="slide.component"
+              v-bind="slide.props"
+            />
 
-          <v-btn icon @click="next">
-            <v-icon>mdi-chevron-right</v-icon>
-          </v-btn>
-        </div>
+          </v-carousel-item>
+        </v-carousel>
+      </v-col>
+    </v-row>
+    <v-row v-else>
+      <v-col cols="12" class="text-center">
+        <v-progress-circular
+          indeterminate
+          size="64"
+          color="primary"
+        ></v-progress-circular>
       </v-col>
     </v-row>
   </v-container>
@@ -40,24 +37,10 @@ export default {
   data() {
     return {
       infocards: [],
-      currentIndex: 0,
-      visibleItems: 3
+      loading: true
     };
   },
-  computed: {
-    visibleInfocards() {
-      const start = this.currentIndex;
-      const end = start + this.visibleItems;
-      return this.infocards.slice(start, end);
-    },
-    carouselStyle() {
-      return {
-        transform: `translateX(-${this.currentIndex * (100 / this.visibleItems)}%)`,
-        display: 'flex'
-      };
-    }
-  },
-  async beforeCreate() {
+  async created() {
     try {
       const { data } = await api.get('/houses', { params: { perPage: 10 } });
 
@@ -70,47 +53,21 @@ export default {
           component: InfoCard,
           props: {
             id: item.id.toString(),
-            imageSrc: item.file_url || 'https://www.shutterstock.com/image-vector/house-logo-template-design-vector-600nw-741515455.jpg',
+            imageSrc: 'https://www.shutterstock.com/image-vector/house-logo-template-design-vector-600nw-741515455.jpg',
             title: item.title,
             description: item.description,
             ownerName: item.recipient.name,
             pixkey: item.pixkey
           }
-        };
+        }
       });
+
+      this.loading = false;
+
     } catch (error) {
-      console.error('Erro ao obter dados das casas', error);
-    }
-  },
-  methods: {
-    next() {
-      if (this.currentIndex < this.infocards.length - this.visibleItems) {
-        this.currentIndex++;
-      }
-    },
-    prev() {
-      if (this.currentIndex > 0) {
-        this.currentIndex--;
-      }
+      console.error('Erro ao obter dados das casas', error)
+      this.loading = false;
     }
   }
 };
 </script>
-
-<style scoped>
-.custom-carousel {
-  display: flex;
-  align-items: center;
-}
-
-.carousel-wrapper {
-  overflow: hidden;
-  width: 100%;
-  display: flex;
-}
-
-.carousel-inner {
-  display: flex;
-  transition: transform 0.5s ease;
-}
-</style>
