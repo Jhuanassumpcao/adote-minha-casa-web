@@ -109,8 +109,6 @@ export default {
   },
   methods: {
     async saveChanges() {
-      // Aqui você pode fazer uma chamada API para salvar as mudanças
-      // Por exemplo: await api.put('/recipients/me', this.user, { withCredentials: true })
       const { data } = await api.put('/recipients/me', this.user, { withCredentials: true })
       this.originalUser = { ...this.user }
       this.isEditing = false
