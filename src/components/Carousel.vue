@@ -35,6 +35,10 @@ export default {
     try {
       const { data } = await api.get('/houses', { params: { perPage: 10 } });
 
+      if (!data.data) {
+        return;
+      }
+
       this.infocards = data.data.map((item) => {
         return {
           component: InfoCard,

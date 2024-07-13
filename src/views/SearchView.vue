@@ -97,6 +97,11 @@ export default {
 
         const { data } = await api.get('/houses', { params });
 
+        if (data.length === 0) {
+          this.infocards = [];
+          return;
+        }
+
         const hdata = data.data;
         const meta = data.meta;
         this.totalPages = meta.last_page;
