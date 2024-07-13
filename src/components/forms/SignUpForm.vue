@@ -130,8 +130,10 @@ export default {
       
       try {
         // User registration
+
         await signIn(signInData);
-        await login(loginData);
+        const b = await login(loginData);
+
 
         // Clean the form
         this.email = '';

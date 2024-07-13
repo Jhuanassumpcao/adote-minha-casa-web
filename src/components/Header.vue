@@ -60,7 +60,10 @@ export default {
     },
     logOut() {
       removeUserToken();
-      this.$router.go(0);
+      this.$router.push('/');
+      if (this.$route.path === '/') {
+        this.$router.go(0);
+      }
     }
   },
   components: {
