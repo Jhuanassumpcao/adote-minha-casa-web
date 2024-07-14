@@ -27,11 +27,8 @@ export default {
     };
   },
   methods: {
-    accessDonatePage() {
-      this.$router.push(`/page/${this.id}`);
-    },
     pagePath() {
-      return `/page/${this.id}`;
+      return `/page/${this.$props.house.id}`;
     }
   }
 };
