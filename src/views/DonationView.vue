@@ -90,6 +90,23 @@
                 <v-btn text @click="dialog = false">Cancelar</v-btn>
               </v-card-actions>
             </v-card>
+
+            popup de confirmação simples
+
+            
+          </v-dialog>
+          <v-dialog v-model="confirm_donation" width="auto">
+            <v-card max-width="400">
+              <v-card-title>Doação Enviada</v-card-title>
+              <v-card-text>
+                <v-alert type="success" icon="mdi-check-circle-outline">
+                  Doação enviada com sucesso!
+                </v-alert>
+              </v-card-text>
+              <v-card-actions>
+                <v-btn color="blue darken-1" text @click="confirm_donation = false">Fechar</v-btn>
+              </v-card-actions>
+            </v-card>
           </v-dialog>
         </v-card-actions>
       </v-card>
@@ -130,7 +147,8 @@ export default {
       donationDescription: '',
       donationProof: null,
       loading: false,
-      donationValueExtracted: false
+      donationValueExtracted: false,
+      confirm_donation: false
     }
   },
   async beforeMount() {
@@ -204,6 +222,10 @@ export default {
       }finally{
         this.loading = false;
         this.dialog = false;
+        this.confirm_donation = true;
+        this.donationValue = '',
+        this.donationDescription = '',
+        this.donationProof = null
       }
     }
   },
