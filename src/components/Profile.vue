@@ -23,8 +23,11 @@
             <p v-else class="description">{{ user.name }}</p>
           </v-col>
           <v-col cols="12">
-            <v-subheader class="subheader"> <v-icon left>mdi-email</v-icon>Email </v-subheader>
-            <p class="contact">{{ user.email }}</p>
+            <v-subheader class="subheader"> <v-icon left>mdi-email</v-icon>Email </v-subheader><v-text-field 
+              v-if="isEditing" 
+              v-model="user.email">
+            </v-text-field>
+            <p v-else class="contact">{{ user.email }}</p>
           </v-col>
           <v-col cols="12">
             <v-subheader class="subheader"> <v-icon left>mdi-phone</v-icon>Phone </v-subheader>
@@ -104,9 +107,7 @@ export default {
   },
   methods: {
     async saveChanges() {
-      const sendData = { ...this.user }
-      delete sendData.email
-      const { data } = await api.put('/recipients/me', sendData)
+      const { data } = await api.put('/recipients/me', this.user)
       this.originalUser = { ...this.user }
       this.isEditing = false
     },
