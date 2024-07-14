@@ -1,7 +1,9 @@
 <template>
   <v-card class="mx-auto fixed-size d-flex flex-column p-3" max-width="344">
     <router-link :to="pagePath()" style="text-decoration:none; color: black;">
-      <v-img :src="file_url || baseUrl" alt="Card image" cover></v-img>
+
+      <v-img :src="house.file_url || baseUrl" alt="Card image" cover></v-img>
+
       <v-card-title>{{ house.title }}</v-card-title>
       <v-card-text>
         <p>{{ house.description }}</p>
@@ -44,6 +46,8 @@ export default {
 }
 .v-img {
   object-fit: cover;
+  max-height: 12rem;
 }
+
 
 </style>

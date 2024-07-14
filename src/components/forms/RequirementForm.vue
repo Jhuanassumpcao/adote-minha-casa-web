@@ -12,6 +12,7 @@
               label="CEP"
               @change="handleCep"
               required
+              prepend-icon="mdi-map-marker"
             ></v-text-field>
             <v-alert v-if="cepError" type="error" dismissible>
               Informe um CEP válido
@@ -21,32 +22,44 @@
               <p>Bairro: {{ bairro }}</p>
               <p>Cidade: {{ city }}</p>
               <p>Estado: {{ state }}</p>
+              <hr>
             </v-alert>
             <v-text-field
               v-model="value"
               label="Estimativa para reparação"
               required
+              prepend-icon="mdi-cash"
             ></v-text-field>
             <v-text-field
               v-model="title"
-              label="Breve descrição"
+              label="Título"
               required
+              prepend-icon="mdi-information"
             ></v-text-field>
             <v-textarea
               v-model="description"
               label="Descrição detalhada"
               required
+              prepend-icon="mdi-text"
             ></v-textarea>
             <v-text-field
               v-model="pix"
               label="Chave Pix"
               required
+              prepend-icon="mdi-currency-usd"
             ></v-text-field>
             <v-text-field
               v-model="phoneNumber"
               label="WhatsApp"
               required
+              prepend-icon="mdi-whatsapp"
             ></v-text-field>
+            <v-file-input
+              v-model="file_url"
+              label="Imagem Significativa"
+              prepend-icon="mdi-camera"
+              accept="image/*"
+            ></v-file-input>
             <v-btn type="submit" class="basic-button mt-4">{{ isEdit ? 'Salvar Alterações' : 'Abrir Requerimento' }}</v-btn>
           </v-form>
         </v-card-text>
@@ -80,17 +93,19 @@ export default {
       description: '',
       pix: '',
       phoneNumber: '',
+      file_url: null,
       cepError: false,
       cepSuccess: false,
       isEdit: false,
-      idUser: ''
+      idHouse: '',
     };
   },
   async beforeMount() {
     this.isEdit = this.$route.query.isEdit === 'true';
-    this.idUser = this.$route.query.id;
-    if (this.isEdit && this.idUser) {
-      this.fetchData(this.idUser);
+    this.idHouse = this.$route.query.id;
+
+    if (this.isEdit && this.idHouse) {
+      this.fetchData(this.idHouse);
     }
   },
   methods: {
@@ -117,42 +132,28 @@ export default {
         alert('Você precisa estar logado para fazer um pedido de ajuda');
         return;
       }
+      const formData = new FormData();
+      formData.append('title', this.title);
+      formData.append('description', this.description);
+      formData.append('pixkey', this.pix);
+      formData.append('address', this.address);
+      formData.append('city', this.city);
+      formData.append('state', this.state);
+      formData.append('value', this.value);
+      formData.append('bairro', this.bairro);
+      formData.append('cep', this.cep);
+      formData.append('number', this.phoneNumber);
+      formData.append('file_url', this.file_url);
 
-      const data = {
-        title: this.title,
-        description: this.description,
-        pixkey: this.pix,
-        address: this.address,
-        city: this.city,
-        state: this.state,
-        value: this.value,
-        bairro: this.bairro,
-        cep: this.cep,
-        number: this.phoneNumber
-      };
+      console.log(formData)
 
       try {
         if (this.isEdit) {
-          const response = await api.put(`/houses/${this.idUser}`, data);
-          this.$router.push(`/profile`);
+          await api.put(`/houses/${this.idHouse}`, formData);
         } else {
-          await addHouse(data);
+          await addHouse(formData);
         }
-
-        if (!this.isEdit) {
-          this.cep = '';
-          this.city = '';
-          this.bairro = '';
-          this.address = '';
-          this.state = '';
-          this.value = '';
-          this.title = '';
-          this.description = '';
-          this.pix = '';
-          this.phoneNumber = '';
-          this.cepError = false;
-          this.cepSuccess = false;
-        }
+        this.$router.push('/profile');
       } catch (error) {
         console.error('Error submitting form:', error);
       }

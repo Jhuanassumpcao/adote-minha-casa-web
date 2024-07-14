@@ -8,7 +8,7 @@
         class="mx-auto"
         max-width="374"
       >
-        <v-img height="250" :src="requirement.file_url" cover></v-img>
+        <v-img height="250" :src="requirement.file_url || baseUrl" cover></v-img>
 
         <v-card-item>
           <v-card-title>{{ requirement.title }}</v-card-title>
@@ -90,9 +90,6 @@
                 <v-btn text @click="dialog = false">Cancelar</v-btn>
               </v-card-actions>
             </v-card>
-
-            popup de confirmação simples
-
             
           </v-dialog>
           <v-dialog v-model="confirm_donation" width="auto">
@@ -148,16 +145,14 @@ export default {
       donationProof: null,
       loading: false,
       donationValueExtracted: false,
-      confirm_donation: false
+      confirm_donation: false,
+      baseUrl: 'https://www.shutterstock.com/image-vector/house-logo-template-design-vector-600nw-741515455.jpg'
     }
   },
   async beforeMount() {
     try {
       const { data } = await api.get(`/houses/${this.$route.params.id}`)
       this.requirement = data
-      if (!data.file_url){
-        this.requirement.file_url = 'https://www.shutterstock.com/image-vector/house-logo-template-design-vector-600nw-741515455.jpg'
-      }
     } catch (error) {
       console.error('Erro ao obter dados das casas', error)
     }
