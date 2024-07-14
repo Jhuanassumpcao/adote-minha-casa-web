@@ -25,7 +25,12 @@
                 :to="link.path"
                 @click="link.action"
               >
-                {{ link.name }}
+                <div v-if="link.name">
+                  {{ link.name }}
+                </div>
+                <v-icon v-else>
+                  {{ link.icon }}
+                </v-icon>
               </router-link>
             </li>
           </ul>
@@ -46,11 +51,12 @@ export default {
       isCollapsed: true,
       active: 0,
       links: [
-        { name: 'Home', path: '/', condition: true },
+        { icon: 'mdi-home', path: '/', condition: true },
+        { icon: 'mdi-account', path: '/profile', condition: isUserLoggedIn() },
         { name: 'Quero Doar', path: '/search', condition: true },
         { name: 'Preciso de Ajuda', path: '/requirement', condition: isUserLoggedIn() },
         { name: 'Entre ou Cadastre-se', path: '/login', condition: !isUserLoggedIn() },
-        { name: 'Sair', path: '/', condition: isUserLoggedIn(), action: this.logOut }
+        { icon: 'mdi-logout', path: '/', condition: isUserLoggedIn(), action: this.logOut }
       ]
     };
   },

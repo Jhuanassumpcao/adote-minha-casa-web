@@ -102,7 +102,7 @@ export default {
   },
   methods: {
     editRequirement(item) {
-      this.$router.push({ name: '/home', params: { id: item.id } })
+      this.$router.push('/requirement?isEdit=true&id=' + item.id)
     },
     openDeleteDialog(id) {
       this.dialog = true;
