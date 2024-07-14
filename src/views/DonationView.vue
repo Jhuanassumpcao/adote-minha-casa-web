@@ -8,15 +8,15 @@
         class="mx-auto"
         max-width="374"
       >
-        <v-img height="250" :src="image" cover></v-img>
+        <v-img height="250" :src="requirement.file_url" cover></v-img>
 
         <v-card-item>
-          <v-card-title>{{ title }}</v-card-title>
+          <v-card-title>{{ requirement.title }}</v-card-title>
 
           <v-card-subtitle>
             <span class="me-1">
-              <v-icon left>mdi-city-variant-outline</v-icon> {{ city }} -
-              {{ state }}
+              <v-icon left>mdi-city-variant-outline</v-icon> {{ requirement.city }} -
+              {{ requirement.state }}
             </span>
 
             <v-icon color="error" icon="mdi-fire-circle" size="small"></v-icon>
@@ -25,20 +25,26 @@
 
         <v-card-text>
           <div class="mb-4 text-subtitle-1">
-            <v-icon left>mdi-home-outline</v-icon> {{ address }} -
-            {{ neighborhood }}, {{ cep }}
+            <v-icon left>mdi-home-outline</v-icon> {{ requirement.address }} -
+            {{ requirement.bairro }}, {{ requirement.cep }}
           </div>
           <div class="my-4 text-subtitle-1">
-            <v-icon left>mdi-phone</v-icon> Telefone: {{ phone }}
+            <v-icon left>mdi-phone</v-icon> Telefone: {{ requirement.number }}
           </div>
-
-          <div>{{ description }}</div>
+          <div class="my-4 text-subtitle-1">
+            <v-icon left>mdi-account</v-icon> Usuário: {{ requirement.owner_name }}
+          </div>
+          <div>{{ requirement.description }}</div>
         </v-card-text>
 
         <v-divider class="mx-4 mb-1"></v-divider>
 
         <v-card-title>
-          Valor Total Estimado: <p class="estimated-value">R$ {{ value }}</p>
+          Valor Total Estimado: <p class="estimated-value">R$ {{ requirement.value }}</p>
+        </v-card-title>
+
+        <v-card-title>
+          Total Recebido: <p class="estimated-value">R$ {{ requirement.total_donations }}</p>
         </v-card-title>
 
         <v-card-actions>
@@ -54,6 +60,7 @@
                     prepend-icon="mdi-camera"
                     accept="image/*"
                     required
+                    @change="imageHandler"
                   ></v-file-input>
                   <v-text-field
                     v-model="donationValue"
@@ -105,17 +112,19 @@ export default {
   },
   data() {
     return {
-      title: '',
-      description: '',
-      pix: '',
-      address: '',
-      city: '',
-      state: '',
-      value: '',
-      neighborhood: '',
-      cep: '',
-      phone: '',
-      image: '',
+      requirement: {
+        title: '',
+        description: '',
+        pixkey: '',
+        address: '',
+        city: '', 
+        state: '',
+        value: '',
+        bairro: '',
+        cep: '',
+        number: '',
+        file_url: ''
+      },
       dialog: false,
       donationValue: '',
       donationDescription: '',
@@ -127,23 +136,16 @@ export default {
   async beforeMount() {
     try {
       const { data } = await api.get(`/houses/${this.$route.params.id}`)
-      this.title = data.title
-      this.description = data.description
-      this.pix = data.pixkey
-      this.address = data.address
-      this.city = data.city
-      this.state = data.state
-      this.value = data.value
-      this.neighborhood = data.bairro
-      this.cep = data.cep
-      this.phone = data.number
-      this.image = data.file_url || 'https://www.shutterstock.com/image-vector/house-logo-template-design-vector-600nw-741515455.jpg'
+      this.requirement = data
+      if (!data.file_url){
+        this.requirement.file_url = 'https://www.shutterstock.com/image-vector/house-logo-template-design-vector-600nw-741515455.jpg'
+      }
     } catch (error) {
       console.error('Erro ao obter dados das casas', error)
     }
   },
   methods: {
-    submitDonation() {
+    imageHandler() {
       const file = this.donationProof;
       if (!file) {
         this.result = 'Por favor, carregue uma imagem.';
@@ -181,11 +183,33 @@ export default {
     },
     convertToNumber(value) {
       return parseFloat(value.replace("R$", "").replace(/\./g, "").replace(",", ".").trim());
+    },
+    async submitDonation(){
+      this.loading = true;
+      if (!this.donationProof || !this.donationValue || !this.donationDescription) {
+        return;
+      }
+      const formData = new FormData();
+      formData.append('image', this.donationProof);
+      formData.append('donationValue', this.donationValue);
+      formData.append('description', this.donationDescription);
+      formData.append('house_id', this.requirement.id);
+
+      try {
+        await api.post(`/donations/`, formData);
+        console.log('Doação enviada com sucesso');
+      } catch (error) {
+        console.error('Erro ao enviar doação', error);
+        this.loading = false;
+      }finally{
+        this.loading = false;
+        this.dialog = false;
+      }
     }
   },
   watch: {
     donationProof(comprovante) {
-      this.submitDonation(comprovante);
+      this.imageHandler(comprovante);
     }
   }
 }

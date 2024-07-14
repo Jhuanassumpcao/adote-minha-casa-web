@@ -114,7 +114,7 @@ export default {
               imageSrc: 'https://www.shutterstock.com/image-vector/house-logo-template-design-vector-600nw-741515455.jpg',
               title: item.title,
               description: item.description,
-              ownerName: item.recipient.name,
+              ownerName: item.owner_name,
               pixkey: item.pixkey
             }
           }

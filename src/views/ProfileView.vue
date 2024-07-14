@@ -15,6 +15,10 @@
               <template v-slot:item.created_at="{ item }">
                 {{ new Date(item.created_at).toLocaleString() }}
               </template>
+              <template v-slot:item.active="{ item }">
+                <v-icon color="green" v-if="isActive(item)">mdi-check-circle</v-icon>
+                <v-icon color="red" v-else>mdi-close-circle</v-icon>
+              </template>
               <template v-slot:item.actions="{ item }">
                 <v-icon small class="mr-2" @click="editRequirement(item)">mdi-pencil</v-icon> 
                 <v-icon small @click="openDeleteDialog(item.id)">mdi-delete</v-icon>
@@ -75,6 +79,9 @@ export default {
         { title: 'Título', value: 'title' },
         { title: 'CEP', value: 'cep' },
         { title: 'Data de criação', value: 'created_at', sortable: true },
+        { title: 'Total de doações', value: 'total_donations', sortable: true },
+        { title: 'Valor estimado', value: 'value', sortable: true },
+        { title: 'Ativo', value: 'active' },
         { text: 'Actions', value: 'actions', sortable: false },
       ],
       deleteId: null,
@@ -86,6 +93,7 @@ export default {
     try {
       const { data } = await api.get('/houses/mine')
       this.requirements = data
+      console.log(data)
     } catch (error) {
       console.error('Erro ao obter dados das requisições', error)
     }finally {
@@ -110,6 +118,9 @@ export default {
       }finally{
         this.dialog = false;
       }
+    },
+    isActive(item){
+      return item.total_donations < item.value
     }
   }
 }
