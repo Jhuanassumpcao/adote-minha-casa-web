@@ -1,10 +1,9 @@
 <template>
   <v-container class="py-5">
-    <v-row>
+    <v-row v-if="infocards.length > 0">
       <v-col cols="12">
         <v-carousel hide-delimiters height="400px">
           <v-carousel-item
-
             v-for="(slide, index) in infocards"
             :key="index">
 
@@ -15,6 +14,15 @@
 
           </v-carousel-item>
         </v-carousel>
+      </v-col>
+    </v-row>
+    <v-row v-else>
+      <v-col cols="12" class="text-center">
+        <v-progress-circular
+          indeterminate
+          size="64"
+          color="primary"
+        ></v-progress-circular>
       </v-col>
     </v-row>
   </v-container>
@@ -28,10 +36,11 @@ export default {
   name: 'Carousel',
   data() {
     return {
-      infocards: []
+      infocards: [],
+      loading: true
     };
   },
-  async beforeCreate() {
+  async created() {
     try {
       const { data } = await api.get('/houses', { params: { perPage: 10 } });
 
@@ -53,8 +62,11 @@ export default {
         }
       });
 
+      this.loading = false;
+
     } catch (error) {
       console.error('Erro ao obter dados das casas', error)
+      this.loading = false;
     }
   }
 };

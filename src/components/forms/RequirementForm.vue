@@ -1,9 +1,9 @@
 <template>
   <v-app>
-    <v-container class="login-container d-flex flex-column align-center justify-center">
+    <v-container class="form-container d-flex flex-column align-center justify-center">
       <v-card class="pa-4" max-width="600">
         <v-card-title>
-          <h1>Iniciar Pedido de Ajuda</h1>
+          <h1>{{ isEdit ? 'Editar Pedido de Ajuda' : 'Iniciar Pedido de Ajuda' }}</h1>
         </v-card-title>
         <v-card-text>
           <v-form @submit.prevent="submit">
@@ -47,7 +47,7 @@
               label="WhatsApp"
               required
             ></v-text-field>
-            <v-btn type="submit" class="basic-button mt-4">Abrir Requerimento</v-btn>
+            <v-btn type="submit" class="basic-button mt-4">{{ isEdit ? 'Salvar Alterações' : 'Abrir Requerimento' }}</v-btn>
           </v-form>
         </v-card-text>
       </v-card>
@@ -57,9 +57,17 @@
 
 <script>
 import addHouse from '@/services/houses.js';
+import getHouse from '@/services/getHouses.js'; // Supondo que você tenha um serviço para buscar os dados de um pedido
+import api from '@/services/api.js';
 
 export default {
   name: 'RequirementForm',
+  props: {
+    id: {
+      type: String,
+      default: null
+    }
+  },
   data() {
     return {
       cep: '',
@@ -74,9 +82,35 @@ export default {
       phoneNumber: '',
       cepError: false,
       cepSuccess: false,
+      isEdit: false,
+      idUser: ''
     };
   },
+  async beforeMount() {
+    this.isEdit = this.$route.query.isEdit === 'true';
+    this.idUser = this.$route.query.id;
+    if (this.isEdit && this.idUser) {
+      this.fetchData(this.idUser);
+    }
+  },
   methods: {
+    async fetchData(id) {
+      try {
+        const existingData = await getHouse(id);
+        this.cep = existingData.cep;
+        this.city = existingData.city;
+        this.bairro = existingData.bairro;
+        this.address = existingData.address;
+        this.state = existingData.state;
+        this.value = existingData.value;
+        this.title = existingData.title;
+        this.description = existingData.description;
+        this.pix = existingData.pixkey;
+        this.phoneNumber = existingData.number;
+      } catch (error) {
+        console.error('Error fetching existing data:', error);
+      }
+    },
     async submit() {
       const token = localStorage.getItem('TOKEN_KEY');
       if (!token) {
@@ -85,33 +119,40 @@ export default {
       }
 
       const data = {
-        "title": this.title,
-        "description": this.description,
-        "pixkey": this.pix,
-        "address": this.address,
-        "city": this.city,
-        "state": this.state,
-        "value": this.value,
-        "bairro": this.bairro,
-        "cep": this.cep,
-        "number": this.phoneNumber
+        title: this.title,
+        description: this.description,
+        pixkey: this.pix,
+        address: this.address,
+        city: this.city,
+        state: this.state,
+        value: this.value,
+        bairro: this.bairro,
+        cep: this.cep,
+        number: this.phoneNumber
       };
-      
+
       try {
-        await addHouse(data);
-        // Clean the form
-        this.cep = '';
-        this.city = '';
-        this.bairro = '';
-        this.address = '';
-        this.state = '';
-        this.value = '';
-        this.title = '';
-        this.description = '';
-        this.pix = '';
-        this.phoneNumber = '';
-        this.cepError = false;
-        this.cepSuccess = false;
+        if (this.isEdit) {
+          const response = await api.put(`/houses/${this.idUser}`, data);
+          this.$router.push(`/profile`);
+        } else {
+          await addHouse(data);
+        }
+
+        if (!this.isEdit) {
+          this.cep = '';
+          this.city = '';
+          this.bairro = '';
+          this.address = '';
+          this.state = '';
+          this.value = '';
+          this.title = '';
+          this.description = '';
+          this.pix = '';
+          this.phoneNumber = '';
+          this.cepError = false;
+          this.cepSuccess = false;
+        }
       } catch (error) {
         console.error('Error submitting form:', error);
       }
@@ -148,7 +189,7 @@ export default {
 </script>
 
 <style scoped>
-.login-container {
+.form-container {
   min-height: 100vh;
   background-color: #f5f5f5;
   display: flex;
