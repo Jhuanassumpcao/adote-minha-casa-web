@@ -51,14 +51,7 @@ export default {
       this.infocards = data.data.map((item) => {
         return {
           component: InfoCard,
-          props: {
-            id: item.id.toString(),
-            imageSrc: 'https://www.shutterstock.com/image-vector/house-logo-template-design-vector-600nw-741515455.jpg',
-            title: item.title,
-            description: item.description,
-            ownerName: item.recipient.name,
-            pixkey: item.pixkey
-          }
+          props: {house : item}
         }
       });
 

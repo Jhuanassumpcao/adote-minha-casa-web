@@ -1,12 +1,12 @@
 <template>
   <v-card class="mx-auto fixed-size d-flex flex-column p-3" max-width="344">
     <router-link :to="pagePath()" style="text-decoration:none; color: black;">
-      <v-img :src="imageSrc" alt="Card image" cover></v-img>
-      <v-card-title>{{ title }}</v-card-title>
+      <v-img :src="file_url || baseUrl" alt="Card image" cover></v-img>
+      <v-card-title>{{ house.title }}</v-card-title>
       <v-card-text>
-        <p>{{ description }}</p>
-        <p><strong>Proprietário:</strong> {{ ownerName }}</p>
-        <p><strong>Chave pix:</strong> {{ pixkey }}</p>
+        <p>{{ house.description }}</p>
+        <p><strong>Proprietário:</strong> {{ house.owner_name }}</p>
+        <p><strong>Chave pix:</strong> {{ house.pixkey }}</p>
       </v-card-text>
     </router-link>
   </v-card>
@@ -16,30 +16,15 @@
 export default {
   name: 'InfoCard',
   props: {
-    id: {
-      type: String,
-      required: true
-    },
-    imageSrc: {
-      type: String,
-      required: true
-    },
-    title: {
-      type: String,
-      required: true
-    },
-    description: {
-      type: String,
-      required: true
-    },
-    ownerName: {
-      type: String,
-      required: true
-    },
-    pixkey: {
-      type: String,
+    house: {
+      type: Object,
       required: true
     }
+  },
+  data() {
+    return {
+      baseUrl: 'https://www.shutterstock.com/image-vector/house-logo-template-design-vector-600nw-741515455.jpg'
+    };
   },
   methods: {
     accessDonatePage() {
