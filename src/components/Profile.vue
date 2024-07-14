@@ -24,13 +24,9 @@
           </v-col>
           <v-col cols="12">
             <v-subheader class="subheader"> <v-icon left>mdi-email</v-icon>Email </v-subheader>
-            <v-text-field 
-              v-if="isEditing" 
-              v-model="user.email">
-            </v-text-field>
-            <p v-else class="contact">{{ user.email }}</p>
+            <p class="contact">{{ user.email }}</p>
           </v-col>
-          <v-col cols="12" v-if="user.phone">
+          <v-col cols="12">
             <v-subheader class="subheader"> <v-icon left>mdi-phone</v-icon>Phone </v-subheader>
             <v-text-field 
               v-if="isEditing" 
@@ -38,7 +34,7 @@
             </v-text-field>
             <p v-else class="contact">{{ user.phone }}</p>
           </v-col>
-          <v-col cols="12" v-if="user.city">
+          <v-col cols="12">
             <v-subheader class="subheader">
               <v-icon left>mdi-map-marker</v-icon>City
             </v-subheader>
@@ -48,7 +44,7 @@
             </v-text-field>
             <p v-else class="address">{{ user.city }}</p>
           </v-col>
-          <v-col cols="12" v-if="user.state">
+          <v-col cols="12">
             <v-subheader class="subheader">
               <v-icon left>mdi-map-marker</v-icon>State
             </v-subheader>
@@ -92,7 +88,6 @@ export default {
         phone: '',
         city: '',
         state: '',
-
       },
       originalUser: {},
       isEditing: false
@@ -100,7 +95,7 @@ export default {
   },
   async created() {
     try {
-      const { data } = await api.get('/recipients/me', { withCredentials: true })
+      const { data } = await api.get('/recipients/me')
       this.user = data
       this.originalUser = { ...data }
     } catch (error) {
@@ -109,7 +104,9 @@ export default {
   },
   methods: {
     async saveChanges() {
-      const { data } = await api.put('/recipients/me', this.user, { withCredentials: true })
+      const sendData = { ...this.user }
+      delete sendData.email
+      const { data } = await api.put('/recipients/me', sendData)
       this.originalUser = { ...this.user }
       this.isEditing = false
     },
