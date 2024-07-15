@@ -59,6 +59,7 @@ export default {
       } catch (error) {
         this.loginFail = true;
         console.log(error);
+        this.$toast.error("Erro ao fazer login");
       }
     },
   },

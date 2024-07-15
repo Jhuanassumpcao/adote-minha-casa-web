@@ -123,6 +123,7 @@ export default {
         this.description = existingData.description;
         this.pix = existingData.pixkey;
         this.phoneNumber = existingData.number;
+        
       } catch (error) {
         console.error('Error fetching existing data:', error);
       }
@@ -151,13 +152,22 @@ export default {
       try {
         if (this.isEdit) {
           await api.put(`/houses/${this.idHouse}`, formData);
+          this.$toast.success("Editado com sucesso!");
         } else {
           await addHouse(formData);
+          this.$toast.success("Pedido feito com sucesso!");
         }
         this.$router.push('/profile');
       } catch (error) {
-        console.error('Error submitting form:', error);
+        if (this.isEdit) {
+          console.error('Error editing house:', error);
+          this.$toast.error('Erro ao editar a casa');
+        } else {
+          console.error('Error adding house:', error);
+          this.$toast.error('Erro ao enviar pedido de ajuda');
+        }
       }
+
     },
     async handleCep(event) {
       const value = event.target.value;

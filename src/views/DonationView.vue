@@ -92,19 +92,6 @@
             </v-card>
             
           </v-dialog>
-          <v-dialog v-model="confirm_donation" width="auto">
-            <v-card max-width="400">
-              <v-card-title>Doação Enviada</v-card-title>
-              <v-card-text>
-                <v-alert type="success" icon="mdi-check-circle-outline">
-                  Doação enviada com sucesso!
-                </v-alert>
-              </v-card-text>
-              <v-card-actions>
-                <v-btn color="blue darken-1" text @click="confirm_donation = false">Fechar</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
         </v-card-actions>
       </v-card>
     </v-container>
@@ -211,8 +198,10 @@ export default {
       try {
         await api.post(`/donations/`, formData);
         console.log('Doação enviada com sucesso');
+        this.$toast.success('Doação enviada com sucesso');
       } catch (error) {
         console.error('Erro ao enviar doação', error);
+        this.$toast.error('Erro ao enviar doação');
         this.loading = false;
       }finally{
         this.loading = false;

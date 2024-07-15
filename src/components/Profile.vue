@@ -108,6 +108,7 @@ export default {
   methods: {
     async saveChanges() {
       const { data } = await api.put('/recipients/me', this.user)
+      this.$toast.success("Editado com sucesso!");
       this.originalUser = { ...this.user }
       this.isEditing = false
     },

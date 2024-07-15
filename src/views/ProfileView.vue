@@ -113,8 +113,10 @@ export default {
         await api.delete(`/houses/${this.deleteId}`)
         this.requirements = this.requirements.filter(item => item.id !== this.deleteId)
         this.deleteId = null;
+        this.$toast.success('Casa deletada com sucesso!')
       } catch (error) {
         console.error('Erro ao deletar requisição', error)
+        this.$toast.error('Erro ao deletar casa')
       }finally{
         this.dialog = false;
       }

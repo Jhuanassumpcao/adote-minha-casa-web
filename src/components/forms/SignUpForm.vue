@@ -145,9 +145,11 @@ export default {
         this.state = '';
 
         this.$router.push(`/requirement`);
+        this.$toast.success("Bem-vindo! :)");
       } catch (error) {
         console.log(error);
         this.signupError = error.response.data.errors[0].message || 'Erro ao se cadastrar';
+        this.$toast.error(this.signupError);
       }
     }
   }
