@@ -3,7 +3,7 @@
     <Header />
     <v-main>
 
-    <v-container class="py-5" id="section1">
+    <div class="py-5" id="section1">
       <v-col class="text-center">
         <h2 class="mb-4">Adote Minha Casa</h2>
         <p style="font-size: 25px">
@@ -32,7 +32,7 @@
           </v-col>
         </v-row>
       </v-col>
-    </v-container>
+    </div>
 
     <v-container class="py-5">
       <v-col class="text-center">
