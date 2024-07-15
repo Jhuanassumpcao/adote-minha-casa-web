@@ -28,6 +28,7 @@
               v-model="value"
               label="Estimativa para reparação"
               required
+              type="number"
               prepend-icon="mdi-cash"
             ></v-text-field>
             <v-text-field
@@ -88,7 +89,7 @@ export default {
       bairro: '',
       address: '',
       state: '',
-      value: '',
+      value: 0,
       title: '',
       description: '',
       pix: '',
