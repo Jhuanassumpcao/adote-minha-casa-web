@@ -171,8 +171,8 @@ export default {
       }
 
     },
-    authenticateWithGoogle() {
-      window.location.href = '/google-auth';
+    async authenticateWithGoogle() {
+      await api.get('/google-auth');
     },
     async handleCep(event) {
       const value = event.target.value;
