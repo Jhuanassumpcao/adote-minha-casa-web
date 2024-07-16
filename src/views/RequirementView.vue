@@ -24,7 +24,7 @@ import Footer from '@/components/Footer.vue';
 import RequirementForm from '@/components/forms/RequirementForm.vue';
 
 export default {
-  name: 'Login',
+  name: 'Requirement',
   components: {
     Header,
     Footer,

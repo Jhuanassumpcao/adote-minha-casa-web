@@ -27,7 +27,7 @@
       </v-col>
     </v-row>
 
-    <v-row justify="center" v-if="failed">
+    <v-row justify="center" v-else-if="failed">
       <v-alert type="warning">
         Nenhuma casa encontrada.
       </v-alert>
@@ -62,7 +62,13 @@ export default {
           component: InfoCard,
           props: {house : item}
         }
+
+      
       });
+      
+      if (this.infocards.length === 0) {
+        this.failed = true;
+      }
 
       this.loading = false;
 

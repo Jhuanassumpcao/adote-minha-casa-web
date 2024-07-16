@@ -30,6 +30,7 @@
               required
               type="number"
               prepend-icon="mdi-cash"
+              min=0
             ></v-text-field>
             <v-text-field
               v-model="title"
