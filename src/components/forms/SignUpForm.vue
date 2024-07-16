@@ -148,7 +148,7 @@ export default {
         this.$toast.success("Bem-vindo! :)");
       } catch (error) {
         console.log(error);
-        this.signupError = error.response.data.errors[0].message || 'Erro ao se cadastrar';
+        this.signupError = error.message || 'Erro ao se cadastrar';
         this.$toast.error(this.signupError);
       }
     }

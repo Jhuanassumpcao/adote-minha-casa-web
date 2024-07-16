@@ -16,7 +16,8 @@
         </v-carousel>
       </v-col>
     </v-row>
-    <v-row v-else>
+
+    <v-row v-if="loading">
       <v-col cols="12" class="text-center">
         <v-progress-circular
           indeterminate
@@ -24,6 +25,12 @@
           color="primary"
         ></v-progress-circular>
       </v-col>
+    </v-row>
+
+    <v-row justify="center" v-if="failed">
+      <v-alert type="warning">
+        Nenhuma casa encontrada.
+      </v-alert>
     </v-row>
   </v-container>
 </template>
@@ -37,11 +44,13 @@ export default {
   data() {
     return {
       infocards: [],
-      loading: true
+      loading: true,
+      failed: false
     };
   },
   async created() {
     try {
+      this.loading = true;
       const { data } = await api.get('/houses', { params: { perPage: 10 } });
 
       if (!data.data) {
@@ -60,6 +69,7 @@ export default {
     } catch (error) {
       console.error('Erro ao obter dados das casas', error)
       this.loading = false;
+      this.failed = true;
     }
   }
 };
