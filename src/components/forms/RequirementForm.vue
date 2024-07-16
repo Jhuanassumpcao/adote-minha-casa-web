@@ -171,7 +171,7 @@ export default {
 
     },
     async authenticateWithGoogle() {
-      await api.put('/google-auth');
+      await api.get('/google-auth');
     },
     async handleCep(event) {
       const value = event.target.value;
