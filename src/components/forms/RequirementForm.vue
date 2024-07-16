@@ -172,7 +172,9 @@ export default {
 
     },
     async authenticateWithGoogle() {
-      await api.get('/google-auth');
+      const url = await api.get('/google-auth');
+      console.log(url);
+      window.location.href = url.data;
     },
     async handleCep(event) {
       const value = event.target.value;
