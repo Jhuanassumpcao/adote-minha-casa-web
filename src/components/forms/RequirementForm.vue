@@ -63,7 +63,7 @@
               accept="image/*"
             ></v-file-input>
             <v-btn type="submit" class="basic-button mt-4">{{ isEdit ? 'Salvar Alterações' : 'Abrir Requerimento' }}</v-btn>
-            <v-btn @click="authenticateWithGoogle" class="basic-button mt-4">Autenticar com Google</v-btn>
+            <!-- <v-btn @click="authenticateWithGoogle" class="basic-button mt-4">Autenticar com Google</v-btn> -->
           </v-form>
         </v-card-text>
       </v-card>
