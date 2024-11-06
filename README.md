@@ -1,47 +1,25 @@
-# adote-minha-casa
+# Adote Minha Casa
 
-This template should help get you started developing with Vue 3 in Vite.
+O projeto 'Adote Minha Casa' visa unir pessoas carentes a doadores dispostos a transformar vidas através da solidariedade. Através de nossa plataforma, conectamos indivíduos e instituições com famílias em necessidade, proporcionando moradias dignas e oportunidades de reconstrução. Com transparência e compromisso com a mudança social, estamos construindo um futuro onde todos têm a chance de viver com dignidade e esperança.
 
-# TODO
+![homepage](https://github.com/elc1090/project3-2024a-flavio-jhuan-1/blob/main/homepage.png)
 
-- Paginação, acessar n casas de cada vez no back
-- Edição de requisição
-- Deletar requisição
-- Aplicar filtros de pesquisa
-- Envio de comprovante
+# Desenvolvedores
 
-## Recommended IDE Setup
+Flávio Borin Júnior
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+Jhuan Luis Almeida Assumpção
 
-## Type Support for `.vue` Imports in TS
+# Projeto
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+O serviço permite que pessoas, ONGs ou instituições que estejam carentes de donativos abram requerimentos específicos para as suas necessidades. Usuários cadastrados podem pedir ajuda informando o seu número para contato, chave Pix e local onde recebe doações, se for o caso. Indivíduos que acessem o site podem filtrar por região e entrar em contato com pessoas carentes através das sua solicitações no site.
 
-## Customize configuration
+# Tecnologias Empregadas
+ - Vue
+ - Bootstrap
+ - Axius
+ - Adonis 5
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+# Ambiente
 
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+- VsCode
